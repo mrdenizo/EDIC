@@ -50,19 +50,6 @@ namespace EDIC
 
         private void LoadApp()
         {
-            //checking languages
-            if (!Directory.Exists("Language Packs"))
-            {
-                Directory.CreateDirectory("Language Packs");
-            }
-            if (!File.Exists("Language Packs\\English.json"))
-            {
-                using (StreamWriter sr = File.CreateText("Language Packs\\English.json"))
-                {
-                    sr.Write(JsonConvert.SerializeObject(new LangPack(), Formatting.Indented));
-                }
-                config.ChoosenLanguage = "Language Packs\\English.json";
-            }
             //reading config
             if (File.Exists("config.json"))
             {
@@ -78,6 +65,18 @@ namespace EDIC
                 config.DataToInara = false;
                 config.DiscordRpc = false;
                 config.ChoosenLanguage = "Language Packs\\English.json";
+            }
+            //checking languages
+            if (!Directory.Exists("Language Packs"))
+            {
+                Directory.CreateDirectory("Language Packs");
+            }
+            if (!File.Exists("Language Packs\\English.json"))
+            {
+                using (StreamWriter sr = File.CreateText("Language Packs\\English.json"))
+                {
+                    sr.Write(JsonConvert.SerializeObject(new LangPack(), Formatting.Indented));
+                }
             }
             lang = JsonConvert.DeserializeObject<LangPack>(File.ReadAllText(config.ChoosenLanguage));
             api = new EliteDangerousAPI(new DirectoryInfo(config.JournalPath));
