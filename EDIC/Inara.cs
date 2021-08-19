@@ -11,10 +11,9 @@ namespace EDIC
 {
     public class Inara
     {
-        public Config config;
-        public Inara(Config config)
+        public Inara()
         {
-            this.config = config;
+            
         }
         public void SendPakage(Package package)
         {
@@ -34,8 +33,8 @@ namespace EDIC
     public class Package
     {
         public Header header;
-        public InaraEvent[] events;
-        public Package(Header header, InaraEvent[] events)
+        public AInaraEvent[] events;
+        public Package(Header header, AInaraEvent[] events)
         {
             this.header = header;
             this.events = events;
@@ -59,12 +58,25 @@ namespace EDIC
             this.commanderFrontierID = commanderFrontierID;
         }
     }
-    public class InaraEvent
+    public abstract class AInaraEvent
     {
         public string eventName;
         public string eventTimestamp;
+    }
+    public class InaraEvent : AInaraEvent
+    {
         public IEventData eventData;
         public InaraEvent(string eventName, string eventTimestamp, IEventData eventData) 
+        {
+            this.eventName = eventName;
+            this.eventTimestamp = eventTimestamp;
+            this.eventData = eventData;
+        }
+    }
+    public class InaraEventMultyply : AInaraEvent
+    {
+        public IEventData[] eventData;
+        public InaraEventMultyply(string eventName, string eventTimestamp, IEventData[] eventData)
         {
             this.eventName = eventName;
             this.eventTimestamp = eventTimestamp;
@@ -76,6 +88,47 @@ namespace EDIC
 
     }
 
+    public class PilotRankEvent : IEventData
+    {
+        public string rankName;
+        public long rankValue;
+        public float rankProgress;
+        public PilotRankEvent(RankName rankName, float rankProgress, long rankValue)
+        {
+            switch (rankName)
+            {
+                case RankName.combat:
+                    this.rankName = "combat";
+                    break;
+                case RankName.trade:
+                    this.rankName = "trade";
+                    break;
+                case RankName.explore:
+                    this.rankName = "explore";
+                    break;
+                case RankName.cqc:
+                    this.rankName = "cqc";
+                    break;
+                case RankName.federation:
+                    this.rankName = "federation";
+                    break;
+                case RankName.empire:
+                    this.rankName = "empire";
+                    break;
+            }
+            this.rankValue = rankValue;
+            this.rankProgress = rankProgress;
+        }
+        public enum RankName
+        {
+            combat,
+            trade,
+            explore,
+            cqc,
+            federation,
+            empire
+        }
+    }
     public class CreditsEvent : IEventData
     {
         public long commanderCredits;
