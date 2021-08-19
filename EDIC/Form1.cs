@@ -22,7 +22,7 @@ namespace EDIC
         private LangPack lang = new LangPack();
         private long ShipID = 0;
         private int time = 60;
-        private string ShipJSON = "";
+        private EliteAPI.Events.LoadoutInfo ShipJSON;
         private string ship = "";
         private string StarSystem;
         private string StarPort;
@@ -172,7 +172,7 @@ namespace EDIC
                             });
                         }
                     }
-                    ShipJSON = LastRightJSON;
+                    ShipJSON = LastLoadoutInfo;
                     ShipID = LastLoadoutInfo.ShipId;
                     ship = LastLoadoutInfo.Ship;
                     ShipLink.Text = LastLoadoutInfo.Ship[0].ToString().ToUpper() + LastLoadoutInfo.Ship.Substring(1, LastLoadoutInfo.Ship.Length - 1);
@@ -183,6 +183,7 @@ namespace EDIC
                     SysLink.Invoke(new Action(() =>
                     {
                         ShipID = ev.ShipId;
+                        ShipJSON = ev;
                         ship = ev.Ship[0].ToString().ToUpper() + ev.Ship.Substring(1, ev.Ship.Length - 1);
                         ShipLink.Text = ev.Ship[0].ToString().ToUpper() + ev.Ship.Substring(1, ev.Ship.Length - 1);
                     }));
@@ -193,7 +194,7 @@ namespace EDIC
                     if (config.DataToInara)
                     {
                         Inara inara = new Inara(config);
-                        Package package = new Package(new Header(true, config.InaraApiKey, api.Commander.Commander, config.FrontierID), new InaraEvent[] { new InaraEvent("addCommanderTravelFSDJump", GetTimeStamp(), new TravelFSDjump(ev.StarSystem, ev.StarPos.ToArray(), ev.JumpDist, ship, ShipID)), new InaraEvent("setCommanderCredits", GetTimeStamp(), new CreditsEvent((int)api.Commander.Credits, (int)api.Commander.Statistics.BankAccount["Current_Wealth"])) });
+                        Package package = new Package(new Header(true, config.InaraApiKey, api.Commander.Commander, config.FrontierID), new InaraEvent[] { new InaraEvent("addCommanderTravelFSDJump", GetTimeStamp(), new TravelFSDjump(ev.StarSystem, ev.StarPos.ToArray(), ev.JumpDist, ship, ShipID)) });
                         inara.SendPakage(package);
                     }
                     SysLink.Invoke(new Action(() =>
@@ -249,6 +250,14 @@ namespace EDIC
                             });
                         }
                     }));
+                };
+                api.Events.ShutdownEvent += (send, ev) =>
+                {
+                    Package package = new Package(new Header(true, config.InaraApiKey, api.Commander.Commander, config.FrontierID), new InaraEvent[] {new InaraEvent("setCommanderCredits", GetTimeStamp(), new CreditsEvent(api.Commander.Credits, api.Commander.Statistics.BankAccount["Current_Wealth"])) });
+                };
+                api.Events.LoadGameEvent += (send, ev) => 
+                {
+                    Package package = new Package(new Header(true, config.InaraApiKey, api.Commander.Commander, config.FrontierID), new InaraEvent[] { new InaraEvent("setCommanderCredits", GetTimeStamp(), new CreditsEvent(api.Commander.Credits, api.Commander.Statistics.BankAccount["Current_Wealth"])) });
                 };
                 api.Events.ShipyardNewEvent += (send, ev) =>
                 {
@@ -307,7 +316,7 @@ namespace EDIC
 
         private void ShipLink_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
         {
-            System.Diagnostics.Process.Start(Exporters.CoriolisExporter.Export(ShipJSON));
+            System.Diagnostics.Process.Start(Exporters.EdsyExport.Export(ShipJSON));
         }
 
         public static FileInfo GetNewestFile(DirectoryInfo directory)

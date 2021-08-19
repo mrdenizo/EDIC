@@ -5,6 +5,8 @@ using System.IO.Compression;
 using System.Linq;
 using System.Text.Json;
 using System.Text;
+using EliteAPI.Events;
+using Newtonsoft.Json;
 using System.Threading.Tasks;
 
 namespace EDIC
@@ -14,9 +16,9 @@ namespace EDIC
         public static class EdsyExport
         {
             //EDSY convert not works now
-            public static string Export(string json)
+            public static string Export(LoadoutInfo json)
             {
-                byte[] data = Gziper.Zip(json);
+                byte[] data = Gziper.Zip(JsonConvert.SerializeObject(new ToSLEFF() { header = new ToSLEFF.ShipHeader { appName  = "Elite:Dangerous Inara connector", appURL = "https://github.com/mrdenizo/EDIC", appVersion = "0.0.1" }, data = json }));
                 string str = Convert.ToBase64String(data);
                 return "http://edsy.org/#/I=" + str.Replace("=", "%3D");
                 //TODO: make it works
@@ -24,9 +26,9 @@ namespace EDIC
         }
         public static class CoriolisExporter
         {
-            public static string Export(string json)
+            public static string Export(LoadoutInfo json)
             {
-                byte[] data = Gziper.Zip(json);
+                byte[] data = Gziper.Zip(JsonConvert.SerializeObject(json));
                 string str = Convert.ToBase64String(data);
                 return "https://coriolis.io/import?data=" + str.Replace("=", "%3D");
             }
@@ -60,5 +62,16 @@ namespace EDIC
                 }
             }
         }
+    }
+    public class ToSLEFF 
+    {
+        public ShipHeader header;
+        public class ShipHeader
+        {
+            public string appName;
+            public string appVersion;
+            public string appURL;
+        }
+        public LoadoutInfo data;
     }
 }

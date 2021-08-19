@@ -78,9 +78,9 @@ namespace EDIC
 
     public class CreditsEvent : IEventData
     {
-        public int commanderCredits;
-        public int commanderAssets;
-        public CreditsEvent(int commanderCredits, int commanderAssets)
+        public long commanderCredits;
+        public long commanderAssets;
+        public CreditsEvent(long commanderCredits, long commanderAssets)
         {
             this.commanderCredits = commanderCredits;
             this.commanderAssets = commanderAssets;
