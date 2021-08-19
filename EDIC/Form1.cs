@@ -19,6 +19,7 @@ namespace EDIC
         {
             InitializeComponent();
         }
+        Inara inara = new Inara();
         private LangPack lang = new LangPack();
         private long ShipID = 0;
         private int time = 60;
@@ -193,7 +194,6 @@ namespace EDIC
                     var keys = api.Commander.Statistics.BankAccount.Keys;
                     if (config.DataToInara)
                     {
-                        Inara inara = new Inara();
                         Package package = new Package(new Header(true, config.InaraApiKey, api.Commander.Commander, config.FrontierID), new InaraEvent[] { new InaraEvent("addCommanderTravelFSDJump", GetTimeStamp(), new TravelFSDjump(ev.StarSystem, ev.StarPos.ToArray(), ev.JumpDist, ship, ShipID)) });
                         inara.SendPakage(package);
                     }
@@ -253,22 +253,28 @@ namespace EDIC
                 };
                 api.Events.ShutdownEvent += (send, ev) =>
                 {
-                    Package package = new Package(new Header(true, config.InaraApiKey, api.Commander.Commander, config.FrontierID), new InaraEvent[] {new InaraEvent("setCommanderCredits", GetTimeStamp(), new CreditsEvent(api.Commander.Credits, api.Commander.Statistics.BankAccount["Current_Wealth"])) });
-                    Inara inara = new Inara();
-                    inara.SendPakage(package);
+                    if (config.DataToInara)
+                    {
+                        Package package = new Package(new Header(true, config.InaraApiKey, api.Commander.Commander, config.FrontierID), new InaraEvent[] { new InaraEvent("setCommanderCredits", GetTimeStamp(), new CreditsEvent(api.Commander.Credits, api.Commander.Statistics.BankAccount["Current_Wealth"])) });
+                        inara.SendPakage(package);
+                    }
                 };
                 api.Events.LoadGameEvent += (send, ev) => 
                 {
-                    Package package = new Package(new Header(true, config.InaraApiKey, api.Commander.Commander, config.FrontierID), new InaraEvent[] { new InaraEvent("setCommanderCredits", GetTimeStamp(), new CreditsEvent(api.Commander.Credits, api.Commander.Statistics.BankAccount["Current_Wealth"])) });
-                    Inara inara = new Inara();
-                    inara.SendPakage(package);
+                    if (config.DataToInara)
+                    {
+                        Package package = new Package(new Header(true, config.InaraApiKey, api.Commander.Commander, config.FrontierID), new InaraEvent[] { new InaraEvent("setCommanderCredits", GetTimeStamp(), new CreditsEvent(api.Commander.Credits, api.Commander.Statistics.BankAccount["Current_Wealth"])) });
+                        inara.SendPakage(package);
+                    }
                 };
                 api.Events.ProgressEvent += (send, ev) => 
                 {
-                    float rank = (float)api.Commander.FederationRankProgress / 100;
-                    long value = api.Commander.FederationRank;
-                    Package package = new Package(new Header(true, config.InaraApiKey, api.Commander.Commander, config.FrontierID), new InaraEventMultyply[]
+                    if (config.DataToInara)
                     {
+                        float rank = (float)api.Commander.FederationRankProgress / 100;
+                        long value = api.Commander.FederationRank;
+                        Package package = new Package(new Header(true, config.InaraApiKey, api.Commander.Commander, config.FrontierID), new InaraEventMultyply[]
+                        {
                         new InaraEventMultyply("setCommanderRankPilot", GetTimeStamp(), new PilotRankEvent[]
                         {
                             new PilotRankEvent(PilotRankEvent.RankName.combat, (float)api.Commander.CombatRankProgress / 100, api.Commander.CombatRank),
@@ -278,17 +284,19 @@ namespace EDIC
                             new PilotRankEvent(PilotRankEvent.RankName.federation, (float)api.Commander.FederationRankProgress / 100, api.Commander.FederationRank),
                             new PilotRankEvent(PilotRankEvent.RankName.empire, (float)api.Commander.EmpireRankProgress / 100, api.Commander.EmpireRank),
                         })
-                    });
-                    Inara inara = new Inara();
-                    inara.SendPakage(package);
+                        });
+                        inara.SendPakage(package);
+                    }
                 };
                 api.Events.RankEvent += (send, ev) => 
                 {
-                    float rank = (float)api.Commander.FederationRankProgress / 100;
-                    long value = api.Commander.FederationRank;
-                    Package package = new Package(new Header(true, config.InaraApiKey, api.Commander.Commander, config.FrontierID), new InaraEventMultyply[] 
+                    if (config.DataToInara)
                     {
-                        new InaraEventMultyply("setCommanderRankPilot", GetTimeStamp(), new PilotRankEvent[] 
+                        float rank = (float)api.Commander.FederationRankProgress / 100;
+                        long value = api.Commander.FederationRank;
+                        Package package = new Package(new Header(true, config.InaraApiKey, api.Commander.Commander, config.FrontierID), new InaraEventMultyply[]
+                        {
+                        new InaraEventMultyply("setCommanderRankPilot", GetTimeStamp(), new PilotRankEvent[]
                         {
                             new PilotRankEvent(PilotRankEvent.RankName.combat, (float)api.Commander.CombatRankProgress / 100, api.Commander.CombatRank),
                             new PilotRankEvent(PilotRankEvent.RankName.trade, (float)api.Commander.CombatRankProgress / 100, api.Commander.TradeRank),
@@ -297,15 +305,23 @@ namespace EDIC
                             new PilotRankEvent(PilotRankEvent.RankName.federation, (float)api.Commander.FederationRankProgress / 100, api.Commander.FederationRank),
                             new PilotRankEvent(PilotRankEvent.RankName.empire, (float)api.Commander.EmpireRankProgress / 100, api.Commander.EmpireRank),
                         })
-                    }); 
-                    Inara inara = new Inara();
-                    inara.SendPakage(package);
+                        });
+                        inara.SendPakage(package);
+                    }
                 };
                 api.Events.EngineerProgressEvent += (send, ev) => 
                 {
-                    
+                    if (config.DataToInara)
+                    {
+                        List<EngineerRank> ranks = new List<EngineerRank>();
+                        foreach (EliteAPI.Events.Engineer r in ev.Engineers)
+                        {
+                            ranks.Add(new EngineerRank(r.EngineerEngineer, r.Progress, r.RankProgress));
+                        }
+                        Package package = new Package(new Header(true, config.InaraApiKey, api.Commander.Commander, config.FrontierID), new InaraEventMultyply[] { new InaraEventMultyply("setCommanderRankEngineer", GetTimeStamp(), ranks.ToArray()) });
+                        inara.SendPakage(package);
+                    }
                 };
-                
             }
             else
             {
@@ -322,6 +338,7 @@ namespace EDIC
         private void EDICmainForm_FormClosing(object sender, FormClosingEventArgs e)
         {
             api.Stop();
+            inara.CloseLogger();
         }
 
         private string HMS()

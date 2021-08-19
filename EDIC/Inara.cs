@@ -11,9 +11,19 @@ namespace EDIC
 {
     public class Inara
     {
+        private StreamWriter logger;
         public Inara()
         {
-            
+            logger = File.CreateText("InaraLog " + GetTimeStamp() + ".log");
+        }
+        private string GetTimeStamp()
+        {
+            string time = $"{DateTime.Today.Year}.{DateTime.Today.Month}.{DateTime.Today.Day} {DateTime.Now.Hour}-{DateTime.Now.Minute}-{DateTime.Now.Second}";
+            return time;
+        }
+        public void CloseLogger()
+        {
+            logger.Close();
         }
         public void SendPakage(Package package)
         {
@@ -27,6 +37,7 @@ namespace EDIC
             sw.Close();
             WebResponse response = request.GetResponse();
             string dat = new StreamReader(response.GetResponseStream(), true).ReadToEnd();
+            logger.Write("Sent: " + JsonConvert.SerializeObject(package) + "\nRecived: " + dat);
             response.Close();
         }
     }
@@ -86,6 +97,19 @@ namespace EDIC
     public interface IEventData
     {
 
+    }
+
+    public class EngineerRank : IEventData
+    {
+        public string engineerName;
+        public string rankStage;
+        public long? rankValue;
+        public EngineerRank(string engineerName, string rankStage, long? rankValue)
+        {
+            this.engineerName = engineerName;
+            this.rankStage = rankStage;
+            this.rankValue = rankValue;
+        }
     }
 
     public class PilotRankEvent : IEventData
