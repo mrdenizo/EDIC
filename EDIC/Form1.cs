@@ -173,10 +173,20 @@ namespace EDIC
                             });
                         }
                     }
-                    ShipJSON = LastLoadoutInfo;
-                    ShipID = LastLoadoutInfo.ShipId;
-                    ship = LastLoadoutInfo.Ship;
-                    ShipLink.Text = LastLoadoutInfo.Ship[0].ToString().ToUpper() + LastLoadoutInfo.Ship.Substring(1, LastLoadoutInfo.Ship.Length - 1);
+                    if (LastLoadoutInfo != null)
+                    {
+                        ShipJSON = LastLoadoutInfo;
+                        ShipID = LastLoadoutInfo.ShipId;
+                        ship = LastLoadoutInfo.Ship;
+                        ShipLink.Text = LastLoadoutInfo.Ship[0].ToString().ToUpper() + LastLoadoutInfo.Ship.Substring(1, LastLoadoutInfo.Ship.Length - 1);
+                    }
+                    else
+                    {
+                        ShipJSON = new EliteAPI.Events.LoadoutInfo();
+                        ShipID = 0;
+                        ship = "unknown";
+                        ShipLink.Text = "Unknown";
+                    }
                 }
                 //event hold
                 api.Events.LoadoutEvent += (send, ev) =>
