@@ -99,6 +99,7 @@ namespace EDIC
 
     }
 
+    //ranks and reputation
     public class EngineerRank : IEventData
     {
         public string engineerName;
@@ -111,7 +112,6 @@ namespace EDIC
             this.rankValue = rankValue;
         }
     }
-
     public class PilotRankEvent : IEventData
     {
         public string rankName;
@@ -153,6 +153,18 @@ namespace EDIC
             empire
         }
     }
+    class MajorFractionRep : IEventData
+    {
+        public string majorfactionName;
+        public float majorfactionReputation;
+        public MajorFractionRep(string majorfactionName, float majorfactionReputation)
+        {
+            this.majorfactionName = majorfactionName;
+            this.majorfactionReputation = majorfactionReputation;
+        }
+    }
+
+    //credits
     public class CreditsEvent : IEventData
     {
         public long commanderCredits;
@@ -163,6 +175,8 @@ namespace EDIC
             this.commanderAssets = commanderAssets;
         }
     }
+
+    //traveling
     public class TravelFSDjump : IEventData
     {
         public string starsystemName;
@@ -175,6 +189,22 @@ namespace EDIC
             this.starsystemName = starsystemName;
             this.starsystemCoords = starsystemCoords;
             this.jumpDistance = jumpDistance;
+            this.shipType = shipType;
+            this.shipGameID = shipGameID;
+        }
+    }
+    public class DockedToStation : IEventData
+    {
+        public string starsystemName;
+        public string stationName;
+        public long marketID;
+        public string shipType;
+        public long shipGameID;
+        public DockedToStation(string starsystemName, string stationName, long marketID, string shipType, long shipGameID)
+        {
+            this.starsystemName = starsystemName;
+            this.stationName = stationName;
+            this.marketID = marketID;
             this.shipType = shipType;
             this.shipGameID = shipGameID;
         }

@@ -173,7 +173,7 @@ namespace EDIC
                             });
                         }
                     }
-                    if (LastLoadoutInfo != null)
+                    if (LastLoadoutInfo.Event != null)
                     {
                         ShipJSON = LastLoadoutInfo;
                         ShipID = LastLoadoutInfo.ShipId;
@@ -260,6 +260,11 @@ namespace EDIC
                             });
                         }
                     }));
+                    if (config.DataToInara)
+                    {
+                        Package package = new Package(new Header(true, config.InaraApiKey, api.Commander.Commander, config.FrontierID), new InaraEvent[] { new InaraEvent("addCommanderTravelDock", GetTimeStamp(), new DockedToStation(ev.StarSystem, ev.StationName, ev.MarketId, ship, ShipID)) });
+                        inara.SendPakage(package);
+                    }
                 };
                 api.Events.ShutdownEvent += (send, ev) =>
                 {
@@ -285,15 +290,31 @@ namespace EDIC
                         long value = api.Commander.FederationRank;
                         Package package = new Package(new Header(true, config.InaraApiKey, api.Commander.Commander, config.FrontierID), new InaraEventMultyply[]
                         {
-                        new InaraEventMultyply("setCommanderRankPilot", GetTimeStamp(), new PilotRankEvent[]
+                            new InaraEventMultyply("setCommanderRankPilot", GetTimeStamp(), new PilotRankEvent[]
+                            {
+                                new PilotRankEvent(PilotRankEvent.RankName.combat, (float)api.Commander.CombatRankProgress / 100, api.Commander.CombatRank),
+                                new PilotRankEvent(PilotRankEvent.RankName.trade, (float)api.Commander.CombatRankProgress / 100, api.Commander.TradeRank),
+                                new PilotRankEvent(PilotRankEvent.RankName.explore, (float)api.Commander.ExplorationRankProgress / 100, api.Commander.ExplorationRank),
+                                new PilotRankEvent(PilotRankEvent.RankName.cqc, (float)api.Commander.CqcRankProgress / 100, api.Commander.CqcRank),
+                                new PilotRankEvent(PilotRankEvent.RankName.federation, (float)api.Commander.FederationRankProgress / 100, api.Commander.FederationRank),
+                                new PilotRankEvent(PilotRankEvent.RankName.empire, (float)api.Commander.EmpireRankProgress / 100, api.Commander.EmpireRank),
+                            })
+                        });
+                        inara.SendPakage(package);
+                    }
+                };
+                api.Events.ReputationEvent += (send, ev) => 
+                {
+                    if (config.DataToInara)
+                    {
+                        Package package = new Package(new Header(true, config.InaraApiKey, api.Commander.Commander, config.FrontierID), new InaraEventMultyply[]
                         {
-                            new PilotRankEvent(PilotRankEvent.RankName.combat, (float)api.Commander.CombatRankProgress / 100, api.Commander.CombatRank),
-                            new PilotRankEvent(PilotRankEvent.RankName.trade, (float)api.Commander.CombatRankProgress / 100, api.Commander.TradeRank),
-                            new PilotRankEvent(PilotRankEvent.RankName.explore, (float)api.Commander.ExplorationRankProgress / 100, api.Commander.ExplorationRank),
-                            new PilotRankEvent(PilotRankEvent.RankName.cqc, (float)api.Commander.CqcRankProgress / 100, api.Commander.CqcRank),
-                            new PilotRankEvent(PilotRankEvent.RankName.federation, (float)api.Commander.FederationRankProgress / 100, api.Commander.FederationRank),
-                            new PilotRankEvent(PilotRankEvent.RankName.empire, (float)api.Commander.EmpireRankProgress / 100, api.Commander.EmpireRank),
-                        })
+                            new InaraEventMultyply("setCommanderReputationMajorFaction", GetTimeStamp(), new MajorFractionRep[]
+                            {
+                                new MajorFractionRep("alliance", (float)ev.Alliance / 100),
+                                new MajorFractionRep("empire", (float)ev.Empire / 100),
+                                new MajorFractionRep("federation", (float)ev.Federation / 100),
+                            })
                         });
                         inara.SendPakage(package);
                     }
@@ -306,15 +327,15 @@ namespace EDIC
                         long value = api.Commander.FederationRank;
                         Package package = new Package(new Header(true, config.InaraApiKey, api.Commander.Commander, config.FrontierID), new InaraEventMultyply[]
                         {
-                        new InaraEventMultyply("setCommanderRankPilot", GetTimeStamp(), new PilotRankEvent[]
-                        {
-                            new PilotRankEvent(PilotRankEvent.RankName.combat, (float)api.Commander.CombatRankProgress / 100, api.Commander.CombatRank),
-                            new PilotRankEvent(PilotRankEvent.RankName.trade, (float)api.Commander.CombatRankProgress / 100, api.Commander.TradeRank),
-                            new PilotRankEvent(PilotRankEvent.RankName.explore, (float)api.Commander.ExplorationRankProgress / 100, api.Commander.ExplorationRank),
-                            new PilotRankEvent(PilotRankEvent.RankName.cqc, (float)api.Commander.CqcRankProgress / 100, api.Commander.CqcRank),
-                            new PilotRankEvent(PilotRankEvent.RankName.federation, (float)api.Commander.FederationRankProgress / 100, api.Commander.FederationRank),
-                            new PilotRankEvent(PilotRankEvent.RankName.empire, (float)api.Commander.EmpireRankProgress / 100, api.Commander.EmpireRank),
-                        })
+                            new InaraEventMultyply("setCommanderRankPilot", GetTimeStamp(), new PilotRankEvent[]
+                            {
+                                new PilotRankEvent(PilotRankEvent.RankName.combat, (float)api.Commander.CombatRankProgress / 100, api.Commander.CombatRank),
+                                new PilotRankEvent(PilotRankEvent.RankName.trade, (float)api.Commander.CombatRankProgress / 100, api.Commander.TradeRank),
+                                new PilotRankEvent(PilotRankEvent.RankName.explore, (float)api.Commander.ExplorationRankProgress / 100, api.Commander.ExplorationRank),
+                                new PilotRankEvent(PilotRankEvent.RankName.cqc, (float)api.Commander.CqcRankProgress / 100, api.Commander.CqcRank),
+                                new PilotRankEvent(PilotRankEvent.RankName.federation, (float)api.Commander.FederationRankProgress / 100, api.Commander.FederationRank),
+                                new PilotRankEvent(PilotRankEvent.RankName.empire, (float)api.Commander.EmpireRankProgress / 100, api.Commander.EmpireRank),
+                            })
                         });
                         inara.SendPakage(package);
                     }
