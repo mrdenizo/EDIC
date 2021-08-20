@@ -209,4 +209,77 @@ namespace EDIC
             this.shipGameID = shipGameID;
         }
     }
+
+    //combat
+    public class CombatDeath : IEventData
+    {
+        public string starsystemName;
+        public string opponentName;
+        public CombatDeath(string starsystemName, string opponentName)
+        {
+            this.starsystemName = starsystemName;
+            this.opponentName = opponentName;
+        }
+    }
+    //not used now ;)
+    public class CombatDeathWing : IEventData
+    {
+        public string starsystemName;
+        public string[] wingOpponentNames;
+        public CombatDeathWing(string starsystemName, string[] wingOpponentNames)
+        {
+            this.starsystemName = starsystemName;
+            this.wingOpponentNames = wingOpponentNames;
+        }
+    }
+    public class GotInterected : IEventData
+    {
+        public string starsystemName;
+        public string opponentName;
+        public bool isPlayer;
+        public bool isSubmit;
+        public GotInterected(string starsystemName, string opponentName, bool isPlayer, bool isSubmit)
+        {
+            this.starsystemName = starsystemName;
+            this.opponentName = opponentName;
+            this.isPlayer = isPlayer;
+            this.isSubmit = isSubmit;
+        }
+    }
+    public class InterectedSomeOne : IEventData
+    {
+        public string starsystemName;
+        public string opponentName;
+        public bool isPlayer;
+        public bool isSuccess;
+        public InterectedSomeOne(string starsystemName, string opponentName, bool isPlayer, bool isSuccess)
+        {
+            this.starsystemName = starsystemName;
+            this.opponentName = opponentName;
+            this.isPlayer = isPlayer;
+            this.isSuccess = isSuccess;
+        }
+    }
+    public class EscapedInterection : IEventData
+    {
+        public string starsystemName;
+        public string opponentName;
+        public bool isPlayer;
+        public EscapedInterection(string starsystemName, string opponentName, bool isPlayer)
+        {
+            this.starsystemName = starsystemName;
+            this.opponentName = opponentName;
+            this.isPlayer = isPlayer;
+        }
+    }
+    public class CommanderPVPkill
+    {
+        public string starsystemName;
+        public string opponentName;
+        public CommanderPVPkill(string starsystemName, string opponentName)
+        {
+            this.starsystemName = starsystemName;
+            this.opponentName = opponentName;
+        }
+    }
 }

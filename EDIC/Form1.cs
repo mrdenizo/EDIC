@@ -353,6 +353,46 @@ namespace EDIC
                         inara.SendPakage(package);
                     }
                 };
+                api.Events.EscapeInterdictionEvent += (send, ev) => 
+                {
+                    if (config.DataToInara)
+                    {
+                        Package package = new Package(new Header(true, config.InaraApiKey, api.Commander.Commander, config.FrontierID), new InaraEvent[] { new InaraEvent("addCommanderCombatInterdictionEscape", GetTimeStamp(), new EscapedInterection(api.Location.StarSystem, ev.Interdictor, ev.IsPlayer)) });
+                        inara.SendPakage(package);
+                    }
+                };
+                api.Events.InterdictionEvent += (send, ev) => 
+                {
+                    if (config.DataToInara)
+                    {
+                        Package package = new Package(new Header(true, config.InaraApiKey, api.Commander.Commander, config.FrontierID), new InaraEvent[] { new InaraEvent("addCommanderCombatInterdiction", GetTimeStamp(), new GotInterected(api.Location.StarSystem, ev.Interdicted, ev.IsPlayer, ev.Success)) });
+                        inara.SendPakage(package);
+                    }
+                };
+                api.Events.InterdictedEvent += (send, ev) =>
+                {
+                    if(config.DataToInara)
+                    {
+                        Package package = new Package(new Header(true, config.InaraApiKey, api.Commander.Commander, config.FrontierID), new InaraEvent[] { new InaraEvent("addCommanderCombatInterdicted", GetTimeStamp(), new GotInterected(api.Location.StarSystem, ev.Interdictor, ev.IsPlayer, ev.Submitted)) });
+                        inara.SendPakage(package);
+                    }
+                };
+                api.Events.DiedEvent += (send, ev) =>
+                {
+                    if (config.DataToInara)
+                    {
+                        Package package = new Package(new Header(true, config.InaraApiKey, api.Commander.Commander, config.FrontierID), new InaraEvent[] { new InaraEvent("addCommanderCombatDeath", GetTimeStamp(), new CombatDeath(api.Location.StarSystem, ev.KillerName)) });
+                        inara.SendPakage(package);
+                    }
+                };
+                api.Events.PVPKillEvent += (send, ev) =>
+                {
+                    if (config.DataToInara)
+                    {
+                        Package package = new Package(new Header(true, config.InaraApiKey, api.Commander.Commander, config.FrontierID), new InaraEvent[] { new InaraEvent("addCommanderCombatKill", GetTimeStamp(), new CombatDeath(api.Location.StarSystem, ev.Victim)) });
+                        inara.SendPakage(package);
+                    }
+                };
             }
             else
             {
