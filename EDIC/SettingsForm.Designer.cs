@@ -51,6 +51,8 @@ namespace EDIC
             this.LangComboBox = new System.Windows.Forms.ComboBox();
             this.OkButton = new System.Windows.Forms.Button();
             this.folderBrowserDialog1 = new System.Windows.Forms.FolderBrowserDialog();
+            this.comboBox1 = new System.Windows.Forms.ComboBox();
+            this.ExpotType = new System.Windows.Forms.Label();
             this.tabControl1.SuspendLayout();
             this.Other.SuspendLayout();
             this.InaraSettings.SuspendLayout();
@@ -70,6 +72,8 @@ namespace EDIC
             // 
             // Other
             // 
+            this.Other.Controls.Add(this.ExpotType);
+            this.Other.Controls.Add(this.comboBox1);
             this.Other.Controls.Add(this.EDDNcheck);
             this.Other.Controls.Add(this.UseRichPresence);
             this.Other.Controls.Add(this.OpenDialogButton);
@@ -263,6 +267,27 @@ namespace EDIC
             // 
             this.folderBrowserDialog1.RootFolder = System.Environment.SpecialFolder.UserProfile;
             // 
+            // comboBox1
+            // 
+            this.comboBox1.FormattingEnabled = true;
+            this.comboBox1.Items.AddRange(new object[] {
+            "Coriolis",
+            "EDSY"});
+            this.comboBox1.Location = new System.Drawing.Point(171, 141);
+            this.comboBox1.Name = "comboBox1";
+            this.comboBox1.Size = new System.Drawing.Size(127, 21);
+            this.comboBox1.TabIndex = 5;
+            this.comboBox1.SelectedIndexChanged += new System.EventHandler(this.comboBox1_SelectedIndexChanged);
+            // 
+            // ExpotType
+            // 
+            this.ExpotType.AutoSize = true;
+            this.ExpotType.Location = new System.Drawing.Point(89, 144);
+            this.ExpotType.Name = "ExpotType";
+            this.ExpotType.Size = new System.Drawing.Size(64, 13);
+            this.ExpotType.TabIndex = 6;
+            this.ExpotType.Text = "Export Type";
+            // 
             // SettingsForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -309,5 +334,7 @@ namespace EDIC
         private System.Windows.Forms.Label LangLabel;
         private System.Windows.Forms.ComboBox LangComboBox;
         private System.Windows.Forms.Button OpenLangPacks;
+        private System.Windows.Forms.Label ExpotType;
+        private System.Windows.Forms.ComboBox comboBox1;
     }
 }

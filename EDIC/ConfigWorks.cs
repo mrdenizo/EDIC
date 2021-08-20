@@ -15,6 +15,7 @@ namespace EDIC
         public bool DiscordRpc = false;
         public bool Eddn = false;
         public string ChoosenLanguage = "";
+        public bool Edsy = false;
     }
     public static class ConfigSaver
     {

@@ -26,6 +26,7 @@ namespace EDIC
             InaraCheck.Checked = cfg.DataToInara;
             UseRichPresence.Checked = cfg.DiscordRpc;
             EDDNcheck.Checked = cfg.Eddn;
+            comboBox1.SelectedIndex = cfg.Edsy ? 1 : 0;
         }
 
         private void LoadTranslation()
@@ -46,6 +47,7 @@ namespace EDIC
             LangLabel.Text = lang.lang["SETTINGSFORM_CHOOSELANGUAGELABEL"];
             OpenLangPacks.Text = lang.lang["SETTINGSFORM_OPENMYPACKAGEFOLDER"];
             OkButton.Text = lang.lang["SETTINGSFORM_OKBUTTON"];
+            ExpotType.Text = lang.lang["SETTINGSFORM_EXPORTTYPELABEL"];
         }
 
         private void Inara_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
@@ -105,6 +107,18 @@ namespace EDIC
             cfg.ChoosenLanguage = "Language Packs\\" + LangComboBox.SelectedItem + ".json";
             lang = JsonConvert.DeserializeObject<LangPack>(File.ReadAllText(cfg.ChoosenLanguage));
             LoadTranslation();
+        }
+
+        private void comboBox1_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            if(comboBox1.SelectedIndex == 0)
+            {
+                cfg.Edsy = false;
+            }
+            else if(comboBox1.SelectedIndex == 1)
+            {
+                cfg.Edsy = true;
+            }
         }
     }
 }

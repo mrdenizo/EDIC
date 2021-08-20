@@ -66,6 +66,7 @@ namespace EDIC
                 config.DataToInara = false;
                 config.DiscordRpc = false;
                 config.ChoosenLanguage = "Language Packs\\English.json";
+                config.Edsy = false;
             }
             //checking languages
             if (!Directory.Exists("Language Packs"))
@@ -483,7 +484,14 @@ namespace EDIC
 
         private void ShipLink_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
         {
-            System.Diagnostics.Process.Start(Exporters.EdsyExport.Export(ShipJSON));
+            if (config.Edsy)
+            {
+                System.Diagnostics.Process.Start(Exporters.EdsyExport.Export(ShipJSON));
+            }
+            else
+            {
+                System.Diagnostics.Process.Start(Exporters.CoriolisExporter.Export(ShipJSON));
+            }
         }
 
         public static FileInfo GetNewestFile(DirectoryInfo directory)

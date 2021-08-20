@@ -35,6 +35,7 @@ namespace EDIC
             lang.Add("SETTINGSFORM_JOURNALPATHLABEL", "Journal Path"); //Journal path text 
             lang.Add("SETTINGSFORM_JOURNALDIALOGOPEN", "Open dialog"); //Open dialog button
             lang.Add("SETTINGSFORM_CHECK_DISCORDRPC", "DiscordRichPresence"); //Discord RPC checkbox
+            lang.Add("SETTINGSFORM_EXPORTTYPELABEL", "Export Type"); //export type label
             lang.Add("SETTINGSFORM_CHECK_SENDDATATOEDDN", "Send my data to EDDN(not works yet)"); //Send my data to EDDN checkbox
 
             lang.Add("SETTINGSFORM_INARAAPIKEYLABEL", "Inara API key"); //Inara API key text

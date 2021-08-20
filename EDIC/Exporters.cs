@@ -5,6 +5,7 @@ using System.IO.Compression;
 using System.Linq;
 using System.Text;
 using Newtonsoft.Json;
+using System.Web;
 using System.Threading.Tasks;
 
 namespace EDIC
@@ -13,18 +14,11 @@ namespace EDIC
     {
         public static class EdsyExport
         {
-            private static string GetTimeStamp()
-            {
-                string time = $"{DateTime.Today.Year}-{DateTime.Today.Month}-{DateTime.Today.Day}T{DateTime.Now.Hour}:{DateTime.Now.Minute}:{DateTime.Now.Second}Z";
-                return time;
-            }
-            //EDSY convert not works yet
             public static string Export(EliteAPI.Events.LoadoutInfo json)
             {
-                byte[] data = Gziper.Zip(JsonConvert.SerializeObject(new LoadOutEventDataEdsy() { Modules = json.Modules.ToArray(), Ship = json.Ship, ShipID = json.ShipId, ShipIdent = json.ShipIdent, Event = "Loadout", timestamp = GetTimeStamp()}).Replace("Event", "event"));
+                byte[] data = Gziper.Zip(JsonConvert.SerializeObject(json));
                 string str = Convert.ToBase64String(data);
-                return "http://edsy.org/#/I=" + str.Replace("=", "%3D");
-                //TODO: make it works
+                return "http://edsy.org/#/I=" + str.Replace("+", "-").Replace("/", "_").Replace("=", "%3D");
             }
         }
         public static class CoriolisExporter
@@ -33,7 +27,7 @@ namespace EDIC
             {
                 byte[] data = Gziper.Zip(JsonConvert.SerializeObject(json));
                 string str = Convert.ToBase64String(data);
-                return "https://coriolis.io/import?data=" + str.Replace("=", "%3D");
+                return "https://coriolis.io/import?data=" + str.Replace("+", "-").Replace("/", "_").Replace("=", "%3D");
             }
         }
         private class Gziper
@@ -65,16 +59,6 @@ namespace EDIC
                 }
             }
         }
-    }
-
-    public class LoadOutEventDataEdsy
-    {
-        public EliteAPI.Events.Module[] Modules;
-        public string Ship;
-        public long ShipID;
-        public string ShipIdent;
-        public string Event;
-        public string timestamp;
     }
 
     public class ToSLEF 
