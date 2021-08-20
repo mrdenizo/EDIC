@@ -36,7 +36,6 @@ namespace EDIC
             this.SysLink = new System.Windows.Forms.LinkLabel();
             this.StarportName = new System.Windows.Forms.Label();
             this.StarportLink = new System.Windows.Forms.LinkLabel();
-            this.button1 = new System.Windows.Forms.Button();
             this.LastUpdated = new System.Windows.Forms.Label();
             this.timer1 = new System.Windows.Forms.Timer(this.components);
             this.ShipLabel = new System.Windows.Forms.Label();
@@ -97,22 +96,10 @@ namespace EDIC
             this.StarportLink.Text = "StarportLink";
             this.StarportLink.LinkClicked += new System.Windows.Forms.LinkLabelLinkClickedEventHandler(this.StarportLink_LinkClicked);
             // 
-            // button1
-            // 
-            this.button1.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
-            this.button1.Location = new System.Drawing.Point(15, 107);
-            this.button1.Name = "button1";
-            this.button1.Size = new System.Drawing.Size(173, 23);
-            this.button1.TabIndex = 5;
-            this.button1.Text = "Force update";
-            this.button1.UseVisualStyleBackColor = true;
-            this.button1.Click += new System.EventHandler(this.button1_Click);
-            // 
             // LastUpdated
             // 
             this.LastUpdated.AutoSize = true;
-            this.LastUpdated.Location = new System.Drawing.Point(12, 133);
+            this.LastUpdated.Location = new System.Drawing.Point(12, 115);
             this.LastUpdated.Name = "LastUpdated";
             this.LastUpdated.Size = new System.Drawing.Size(75, 13);
             this.LastUpdated.TabIndex = 6;
@@ -164,7 +151,7 @@ namespace EDIC
             // settingsToolStripMenuItem
             // 
             this.settingsToolStripMenuItem.Name = "settingsToolStripMenuItem";
-            this.settingsToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+            this.settingsToolStripMenuItem.Size = new System.Drawing.Size(116, 22);
             this.settingsToolStripMenuItem.Text = "Settings";
             this.settingsToolStripMenuItem.Click += new System.EventHandler(this.settingsToolStripMenuItem_Click);
             // 
@@ -172,11 +159,10 @@ namespace EDIC
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(200, 155);
+            this.ClientSize = new System.Drawing.Size(200, 138);
             this.Controls.Add(this.ShipLink);
             this.Controls.Add(this.ShipLabel);
             this.Controls.Add(this.LastUpdated);
-            this.Controls.Add(this.button1);
             this.Controls.Add(this.StarportLink);
             this.Controls.Add(this.StarportName);
             this.Controls.Add(this.SysLink);
@@ -203,7 +189,6 @@ namespace EDIC
         private System.Windows.Forms.LinkLabel SysLink;
         private System.Windows.Forms.Label StarportName;
         private System.Windows.Forms.LinkLabel StarportLink;
-        private System.Windows.Forms.Button button1;
         private System.Windows.Forms.Label LastUpdated;
         private System.Windows.Forms.Timer timer1;
         private System.Windows.Forms.Label ShipLabel;
