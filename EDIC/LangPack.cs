@@ -21,8 +21,6 @@ namespace EDIC
             lang.Add("EDICFORM_STATIONLABLESTART", "Starport:"); //Station name start
 
             lang.Add("EDICFORM_LASTUPDATELABLESTART", "Last updated:"); //Last updated
-            lang.Add("EDICFORM_FORCEUPDATEBUTTON", "Force update"); //Force update button text
-            lang.Add("EDICFORM_FORCEUPDATEBUTTONPAUSE", "Pause "); //Pause (time) text on button
 
             lang.Add("EDICFORM_TEXT", "EDIC"); //Main form capture text
 

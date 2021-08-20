@@ -46,7 +46,6 @@ namespace EDIC
             ShipLabel.Text = lang.lang["EDICFORM_SHIPLABLESTART"];
             SysName.Text = lang.lang["EDICFORM_SYSTEMLABLESTART"];
             StarportName.Text = lang.lang["EDICFORM_STATIONLABLESTART"];
-            button1.Text = lang.lang["EDICFORM_FORCEUPDATEBUTTON"];
         }
 
         private void LoadApp()
@@ -244,7 +243,6 @@ namespace EDIC
                     }
                     SysLink.Invoke(new Action(() =>
                     {
-                        timer1.Start();
                         SysLink.Text = ev.StarSystem;
                         StarSystem = ev.StarSystem;
                     }));
@@ -253,7 +251,6 @@ namespace EDIC
                 {
                     SysLink.Invoke(new Action(() =>
                     {
-                        timer1.Start();
                         StarportLink.Enabled = false;
                         StarportLink.Text = "x";
                         StarPort = "x";
@@ -276,7 +273,6 @@ namespace EDIC
                 {
                     SysLink.Invoke(new Action(() =>
                     {
-                        timer1.Start();
                         LastUpdated.Text = lang.lang["EDICFORM_LASTUPDATELABLESTART"] + HMS();
                         StarportLink.Enabled = true;
                         StarportLink.Text = ev.StationName;
@@ -507,29 +503,6 @@ namespace EDIC
                 }
             }
             return files.ToArray().Union(directory.GetDirectories().Select(d => GetNewestFile(d))).OrderByDescending(f => (f == null ? DateTime.MinValue : f.LastWriteTime)).FirstOrDefault();
-        }
-
-        private void button1_Click(object sender, EventArgs e)
-        {
-            timer1.Start();
-            LastUpdated.Text = lang.lang["EDICFORM_LASTUPDATELABLESTART"] + HMS();
-        }
-
-        private void timer1_Tick(object sender, EventArgs e)
-        {
-            time -= 1;
-            if(time > 0)
-            {
-                button1.Enabled = false;
-                button1.Text = lang.lang["EDICFORM_FORCEUPDATEBUTTONPAUSE"] + " (" + time + ")";
-            }
-            else
-            {
-                button1.Enabled = true;
-                button1.Text = "Force update";
-                time = 60;
-                timer1.Stop();
-            }
         }
 
         private void settingsToolStripMenuItem_Click(object sender, EventArgs e)

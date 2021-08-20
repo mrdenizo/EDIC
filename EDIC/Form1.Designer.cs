@@ -29,7 +29,6 @@ namespace EDIC
         /// </summary>
         private void InitializeComponent()
         {
-            this.components = new System.ComponentModel.Container();
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(EDICmainForm));
             this.CMDR_lable = new System.Windows.Forms.Label();
             this.SysName = new System.Windows.Forms.Label();
@@ -37,7 +36,6 @@ namespace EDIC
             this.StarportName = new System.Windows.Forms.Label();
             this.StarportLink = new System.Windows.Forms.LinkLabel();
             this.LastUpdated = new System.Windows.Forms.Label();
-            this.timer1 = new System.Windows.Forms.Timer(this.components);
             this.ShipLabel = new System.Windows.Forms.Label();
             this.ShipLink = new System.Windows.Forms.LinkLabel();
             this.menuStrip1 = new System.Windows.Forms.MenuStrip();
@@ -104,11 +102,6 @@ namespace EDIC
             this.LastUpdated.Size = new System.Drawing.Size(75, 13);
             this.LastUpdated.TabIndex = 6;
             this.LastUpdated.Text = "Last updated: ";
-            // 
-            // timer1
-            // 
-            this.timer1.Interval = 1000;
-            this.timer1.Tick += new System.EventHandler(this.timer1_Tick);
             // 
             // ShipLabel
             // 
@@ -190,7 +183,6 @@ namespace EDIC
         private System.Windows.Forms.Label StarportName;
         private System.Windows.Forms.LinkLabel StarportLink;
         private System.Windows.Forms.Label LastUpdated;
-        private System.Windows.Forms.Timer timer1;
         private System.Windows.Forms.Label ShipLabel;
         private System.Windows.Forms.LinkLabel ShipLink;
         private System.Windows.Forms.MenuStrip menuStrip1;
