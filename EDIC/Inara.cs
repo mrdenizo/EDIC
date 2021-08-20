@@ -62,7 +62,7 @@ namespace EDIC
         public Header(bool isDeveloped, string APIkey, string commanderName, string commanderFrontierID)
         {
             this.appName = "Elite:Dangerous Inara connector";
-            this.appVersion = "0.0.1";
+            this.appVersion = "0.0.8";
             this.isDeveloped = isDeveloped;
             this.APIkey = APIkey;
             this.commanderName = commanderName;
@@ -209,6 +209,24 @@ namespace EDIC
             this.shipGameID = shipGameID;
         }
     }
+    public class ShipTransfer : IEventData
+    {
+        public string shipType;
+        public long shipGameID;
+        public string starsystemName;
+        public string stationName;
+        public long marketID;
+        public long transferTime;
+        public ShipTransfer(string shipType, long shipGameID, string starsystemName, string stationName, long marketID, long transferTime)
+        {
+            this.shipType = shipType;
+            this.shipGameID = shipGameID;
+            this.starsystemName = starsystemName;
+            this.stationName = stationName;
+            this.marketID = marketID;
+            this.transferTime = transferTime;
+        }
+    }
 
     //combat
     public class CombatDeath : IEventData
@@ -272,7 +290,7 @@ namespace EDIC
             this.isPlayer = isPlayer;
         }
     }
-    public class CommanderPVPkill
+    public class CommanderPVPkill : IEventData
     {
         public string starsystemName;
         public string opponentName;
@@ -280,6 +298,18 @@ namespace EDIC
         {
             this.starsystemName = starsystemName;
             this.opponentName = opponentName;
+        }
+    }
+
+    //materials
+    public  class SetMaterials : IEventData
+    {
+        public string itemName;
+        public long itemCount;
+        public SetMaterials(string itemName, long itemCount)
+        {
+            this.itemName = itemName;
+            this.itemCount = itemCount;
         }
     }
 }

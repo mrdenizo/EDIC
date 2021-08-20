@@ -189,6 +189,7 @@ namespace EDIC
                     }
                 }
                 //event hold
+                //loadout event
                 api.Events.LoadoutEvent += (send, ev) =>
                 {
                     SysLink.Invoke(new Action(() =>
@@ -199,6 +200,39 @@ namespace EDIC
                         ShipLink.Text = ev.Ship[0].ToString().ToUpper() + ev.Ship.Substring(1, ev.Ship.Length - 1);
                     }));
                 };
+                api.Events.ShipyardTransferEvent += (send, ev) =>
+                {
+                    if (config.DataToInara)
+                    {
+                        Package package = new Package(new Header(true, config.InaraApiKey, api.Commander.Commander, config.FrontierID), new InaraEvent[] { new InaraEvent("setCommanderShipTransfer", GetTimeStamp(), new ShipTransfer(ev.ShipType, ev.ShipId, api.Location.StarSystem, api.Location.Station, ev.MarketId, ev.TransferTime)) });
+                        inara.SendPakage(package);
+                    }
+                };
+
+                //materials event
+                api.Events.MaterialsEvent += (send, ev) =>
+                {
+                    if (config.DataToInara)
+                    {
+                        List<SetMaterials> materials = new List<SetMaterials>();
+                        foreach (EliteAPI.Events.Raw r in ev.Raw)
+                        {
+                            materials.Add(new SetMaterials(r.Name, r.Count));
+                        }
+                        foreach (EliteAPI.Events.Encoded r in ev.Manufactured)
+                        {
+                            materials.Add(new SetMaterials(r.Name, r.Count));
+                        }
+                        foreach (EliteAPI.Events.Encoded r in ev.Encoded)
+                        {
+                            materials.Add(new SetMaterials(r.Name, r.Count));
+                        }
+                        Package package = new Package(new Header(true, config.InaraApiKey, api.Commander.Commander, config.FrontierID), new InaraEventMultyply[] { new InaraEventMultyply("setCommanderInventoryMaterials", GetTimeStamp(), materials.ToArray()) });
+                        inara.SendPakage(package);
+                    }
+                };
+
+                //traveling events
                 api.Events.FSDJumpEvent += (send, ev) =>
                 {
                     var keys = api.Commander.Statistics.BankAccount.Keys;
@@ -266,6 +300,8 @@ namespace EDIC
                         inara.SendPakage(package);
                     }
                 };
+
+                //game start\stop
                 api.Events.ShutdownEvent += (send, ev) =>
                 {
                     if (config.DataToInara)
@@ -282,6 +318,8 @@ namespace EDIC
                         inara.SendPakage(package);
                     }
                 };
+
+                //ranks reputation progress
                 api.Events.ProgressEvent += (send, ev) => 
                 {
                     if (config.DataToInara)
@@ -353,6 +391,8 @@ namespace EDIC
                         inara.SendPakage(package);
                     }
                 };
+
+                //combat events
                 api.Events.EscapeInterdictionEvent += (send, ev) => 
                 {
                     if (config.DataToInara)
@@ -389,7 +429,7 @@ namespace EDIC
                 {
                     if (config.DataToInara)
                     {
-                        Package package = new Package(new Header(true, config.InaraApiKey, api.Commander.Commander, config.FrontierID), new InaraEvent[] { new InaraEvent("addCommanderCombatKill", GetTimeStamp(), new CombatDeath(api.Location.StarSystem, ev.Victim)) });
+                        Package package = new Package(new Header(true, config.InaraApiKey, api.Commander.Commander, config.FrontierID), new InaraEvent[] { new InaraEvent("addCommanderCombatKill", GetTimeStamp(), new CommanderPVPkill(api.Location.StarSystem, ev.Victim)) });
                         inara.SendPakage(package);
                     }
                 };

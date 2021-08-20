@@ -4,7 +4,6 @@ using System.IO;
 using System.IO.Compression;
 using System.Linq;
 using System.Text;
-using EliteAPI.Events;
 using Newtonsoft.Json;
 using System.Threading.Tasks;
 
@@ -14,10 +13,15 @@ namespace EDIC
     {
         public static class EdsyExport
         {
-            //EDSY convert not works now
-            public static string Export(LoadoutInfo json)
+            private static string GetTimeStamp()
             {
-                byte[] data = Gziper.Zip(JsonConvert.SerializeObject(new ToSLEFF() { header = new ToSLEFF.ShipHeader { appName  = "Elite:Dangerous Inara connector", appURL = "https://github.com/mrdenizo/EDIC", appVersion = "0.0.1" }, data = json }));
+                string time = $"{DateTime.Today.Year}-{DateTime.Today.Month}-{DateTime.Today.Day}T{DateTime.Now.Hour}:{DateTime.Now.Minute}:{DateTime.Now.Second}Z";
+                return time;
+            }
+            //EDSY convert not works yet
+            public static string Export(EliteAPI.Events.LoadoutInfo json)
+            {
+                byte[] data = Gziper.Zip(JsonConvert.SerializeObject(new LoadOutEventDataEdsy() { Modules = json.Modules.ToArray(), Ship = json.Ship, ShipID = json.ShipId, ShipIdent = json.ShipIdent, Event = "Loadout", timestamp = GetTimeStamp()}).Replace("Event", "event"));
                 string str = Convert.ToBase64String(data);
                 return "http://edsy.org/#/I=" + str.Replace("=", "%3D");
                 //TODO: make it works
@@ -25,7 +29,7 @@ namespace EDIC
         }
         public static class CoriolisExporter
         {
-            public static string Export(LoadoutInfo json)
+            public static string Export(EliteAPI.Events.LoadoutInfo json)
             {
                 byte[] data = Gziper.Zip(JsonConvert.SerializeObject(json));
                 string str = Convert.ToBase64String(data);
@@ -62,15 +66,96 @@ namespace EDIC
             }
         }
     }
-    public class ToSLEFF 
+
+    public class LoadOutEventDataEdsy
+    {
+        public EliteAPI.Events.Module[] Modules;
+        public string Ship;
+        public long ShipID;
+        public string ShipIdent;
+        public string Event;
+        public string timestamp;
+    }
+
+    public class ToSLEF 
     {
         public ShipHeader header;
+        public LoadOutData data;
+        public ToSLEF(string ShipType, EliteAPI.Events.LoadoutInfo info)
+        {
+            this.header = new ShipHeader("Elite:Dangerous Inara connector", "0.0.8", "https://github.com/mrdenizo/EDIC");
+            List<Module> modules = new List<Module>();
+            foreach(EliteAPI.Events.Module module in info.Modules)
+            {
+                if(module.Engineering != null)
+                {
+                    modules.Add(new EngineeredModule(module.Slot, module.Item, new EngineeringModule(module.Engineering.BlueprintName, module.Engineering.Level, module.Engineering.Quality, module.Engineering.ExperimentalEffect)));
+                }
+                else
+                {
+                    modules.Add(new ShipModule(module.Slot, module.Item));
+                }
+            }
+            this.data = new LoadOutData(ShipType, modules);
+        }
         public class ShipHeader
         {
             public string appName;
             public string appVersion;
             public string appURL;
+            public ShipHeader(string appName, string appVersion, string appURL)
+            {
+                this.appName = appName;
+                this.appVersion = appVersion;
+                this.appURL = appURL;
+            }
         }
-        public LoadoutInfo data;
+        public class LoadOutData
+        {
+            public string Ship;
+            public Module[] Modules;
+            public LoadOutData(string Ship, List<Module> Modules)
+            {
+                this.Ship = Ship;
+                this.Modules = Modules.ToArray();
+            }
+        }
+        public abstract class Module
+        {
+            public string Slot;
+            public string Item;
+        }
+        public class ShipModule : Module
+        {
+            public ShipModule(string Slot, string Item)
+            {
+                this.Slot = Slot;
+                this.Item = Item;
+            }
+        }
+        public class EngineeredModule : Module
+        {
+            public EngineeringModule Engineering;
+            public EngineeredModule(string Slot, string Item, EngineeringModule Engineering)
+            {
+                this.Slot = Slot;
+                this.Item = Item;
+                this.Engineering = Engineering;
+            }
+        }
+        public class EngineeringModule
+        {
+            public string BlueprintName;
+            public long Level;
+            public double Quality;
+            public string ExperimentalEffect;
+            public EngineeringModule(string BlueprintName, long Level, double Quality, string ExperimentalEffect)
+            {
+                this.BlueprintName = BlueprintName;
+                this.Level = Level;
+                this.Quality = Quality;
+                this.ExperimentalEffect = ExperimentalEffect;
+            }
+        }
     }
 }

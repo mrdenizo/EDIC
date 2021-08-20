@@ -32,25 +32,25 @@ namespace EDIC
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(SettingsForm));
             this.tabControl1 = new System.Windows.Forms.TabControl();
             this.Other = new System.Windows.Forms.TabPage();
+            this.EDDNcheck = new System.Windows.Forms.CheckBox();
+            this.UseRichPresence = new System.Windows.Forms.CheckBox();
             this.OpenDialogButton = new System.Windows.Forms.Button();
             this.JournalPath = new System.Windows.Forms.TextBox();
             this.JournalPathLabel = new System.Windows.Forms.Label();
             this.InaraSettings = new System.Windows.Forms.TabPage();
+            this.FrontierIDlink = new System.Windows.Forms.LinkLabel();
             this.InaraCheck = new System.Windows.Forms.CheckBox();
             this.FrontierIdLabel = new System.Windows.Forms.Label();
             this.FrontierId = new System.Windows.Forms.TextBox();
             this.InaraApi = new System.Windows.Forms.TextBox();
             this.ApiKeyLabel = new System.Windows.Forms.Label();
             this.InaraLink = new System.Windows.Forms.LinkLabel();
+            this.Language = new System.Windows.Forms.TabPage();
+            this.OpenLangPacks = new System.Windows.Forms.Button();
+            this.LangLabel = new System.Windows.Forms.Label();
+            this.LangComboBox = new System.Windows.Forms.ComboBox();
             this.OkButton = new System.Windows.Forms.Button();
             this.folderBrowserDialog1 = new System.Windows.Forms.FolderBrowserDialog();
-            this.FrontierIDlink = new System.Windows.Forms.LinkLabel();
-            this.UseRichPresence = new System.Windows.Forms.CheckBox();
-            this.EDDNcheck = new System.Windows.Forms.CheckBox();
-            this.Language = new System.Windows.Forms.TabPage();
-            this.LangComboBox = new System.Windows.Forms.ComboBox();
-            this.LangLabel = new System.Windows.Forms.Label();
-            this.OpenLangPacks = new System.Windows.Forms.Button();
             this.tabControl1.SuspendLayout();
             this.Other.SuspendLayout();
             this.InaraSettings.SuspendLayout();
@@ -81,6 +81,27 @@ namespace EDIC
             this.Other.TabIndex = 0;
             this.Other.Text = "Settings";
             this.Other.UseVisualStyleBackColor = true;
+            // 
+            // EDDNcheck
+            // 
+            this.EDDNcheck.AutoSize = true;
+            this.EDDNcheck.Enabled = false;
+            this.EDDNcheck.Location = new System.Drawing.Point(92, 118);
+            this.EDDNcheck.Name = "EDDNcheck";
+            this.EDDNcheck.Size = new System.Drawing.Size(206, 17);
+            this.EDDNcheck.TabIndex = 4;
+            this.EDDNcheck.Text = "Send my data to EDDN(not works yet)";
+            this.EDDNcheck.UseVisualStyleBackColor = true;
+            // 
+            // UseRichPresence
+            // 
+            this.UseRichPresence.AutoSize = true;
+            this.UseRichPresence.Location = new System.Drawing.Point(92, 94);
+            this.UseRichPresence.Name = "UseRichPresence";
+            this.UseRichPresence.Size = new System.Drawing.Size(129, 17);
+            this.UseRichPresence.TabIndex = 3;
+            this.UseRichPresence.Text = "DiscordRichPresence";
+            this.UseRichPresence.UseVisualStyleBackColor = true;
             // 
             // OpenDialogButton
             // 
@@ -123,6 +144,17 @@ namespace EDIC
             this.InaraSettings.TabIndex = 1;
             this.InaraSettings.Text = "Inara";
             this.InaraSettings.UseVisualStyleBackColor = true;
+            // 
+            // FrontierIDlink
+            // 
+            this.FrontierIDlink.AutoSize = true;
+            this.FrontierIDlink.Location = new System.Drawing.Point(117, 157);
+            this.FrontierIDlink.Name = "FrontierIDlink";
+            this.FrontierIDlink.Size = new System.Drawing.Size(89, 13);
+            this.FrontierIDlink.TabIndex = 6;
+            this.FrontierIDlink.TabStop = true;
+            this.FrontierIDlink.Text = "Get my frontier ID";
+            this.FrontierIDlink.LinkClicked += new System.Windows.Forms.LinkLabelLinkClickedEventHandler(this.FrontierIDlink_LinkClicked);
             // 
             // InaraCheck
             // 
@@ -177,6 +209,46 @@ namespace EDIC
             this.InaraLink.Text = "Get my Inara API key";
             this.InaraLink.LinkClicked += new System.Windows.Forms.LinkLabelLinkClickedEventHandler(this.Inara_LinkClicked);
             // 
+            // Language
+            // 
+            this.Language.Controls.Add(this.OpenLangPacks);
+            this.Language.Controls.Add(this.LangLabel);
+            this.Language.Controls.Add(this.LangComboBox);
+            this.Language.Location = new System.Drawing.Point(4, 22);
+            this.Language.Name = "Language";
+            this.Language.Size = new System.Drawing.Size(666, 460);
+            this.Language.TabIndex = 2;
+            this.Language.Text = "Language";
+            this.Language.UseVisualStyleBackColor = true;
+            // 
+            // OpenLangPacks
+            // 
+            this.OpenLangPacks.Location = new System.Drawing.Point(289, 77);
+            this.OpenLangPacks.Name = "OpenLangPacks";
+            this.OpenLangPacks.Size = new System.Drawing.Size(140, 36);
+            this.OpenLangPacks.TabIndex = 2;
+            this.OpenLangPacks.Text = "Open my langugage packs folder";
+            this.OpenLangPacks.UseVisualStyleBackColor = true;
+            this.OpenLangPacks.Click += new System.EventHandler(this.OpenLangPacks_Click);
+            // 
+            // LangLabel
+            // 
+            this.LangLabel.AutoSize = true;
+            this.LangLabel.Location = new System.Drawing.Point(8, 53);
+            this.LangLabel.Name = "LangLabel";
+            this.LangLabel.Size = new System.Drawing.Size(90, 13);
+            this.LangLabel.TabIndex = 1;
+            this.LangLabel.Text = "Choose language";
+            // 
+            // LangComboBox
+            // 
+            this.LangComboBox.FormattingEnabled = true;
+            this.LangComboBox.Location = new System.Drawing.Point(104, 50);
+            this.LangComboBox.Name = "LangComboBox";
+            this.LangComboBox.Size = new System.Drawing.Size(325, 21);
+            this.LangComboBox.TabIndex = 0;
+            this.LangComboBox.SelectedIndexChanged += new System.EventHandler(this.LangComboBox_SelectedIndexChanged);
+            // 
             // OkButton
             // 
             this.OkButton.Location = new System.Drawing.Point(582, 484);
@@ -190,77 +262,6 @@ namespace EDIC
             // folderBrowserDialog1
             // 
             this.folderBrowserDialog1.RootFolder = System.Environment.SpecialFolder.UserProfile;
-            // 
-            // FrontierIDlink
-            // 
-            this.FrontierIDlink.AutoSize = true;
-            this.FrontierIDlink.Location = new System.Drawing.Point(117, 157);
-            this.FrontierIDlink.Name = "FrontierIDlink";
-            this.FrontierIDlink.Size = new System.Drawing.Size(89, 13);
-            this.FrontierIDlink.TabIndex = 6;
-            this.FrontierIDlink.TabStop = true;
-            this.FrontierIDlink.Text = "Get my frontier ID";
-            this.FrontierIDlink.LinkClicked += new System.Windows.Forms.LinkLabelLinkClickedEventHandler(this.FrontierIDlink_LinkClicked);
-            // 
-            // UseRichPresence
-            // 
-            this.UseRichPresence.AutoSize = true;
-            this.UseRichPresence.Location = new System.Drawing.Point(92, 94);
-            this.UseRichPresence.Name = "UseRichPresence";
-            this.UseRichPresence.Size = new System.Drawing.Size(129, 17);
-            this.UseRichPresence.TabIndex = 3;
-            this.UseRichPresence.Text = "DiscordRichPresence";
-            this.UseRichPresence.UseVisualStyleBackColor = true;
-            // 
-            // EDDNcheck
-            // 
-            this.EDDNcheck.AutoSize = true;
-            this.EDDNcheck.Location = new System.Drawing.Point(92, 118);
-            this.EDDNcheck.Name = "EDDNcheck";
-            this.EDDNcheck.Size = new System.Drawing.Size(137, 17);
-            this.EDDNcheck.TabIndex = 4;
-            this.EDDNcheck.Text = "Send my data to EDDN";
-            this.EDDNcheck.UseVisualStyleBackColor = true;
-            // 
-            // Language
-            // 
-            this.Language.Controls.Add(this.OpenLangPacks);
-            this.Language.Controls.Add(this.LangLabel);
-            this.Language.Controls.Add(this.LangComboBox);
-            this.Language.Location = new System.Drawing.Point(4, 22);
-            this.Language.Name = "Language";
-            this.Language.Size = new System.Drawing.Size(666, 460);
-            this.Language.TabIndex = 2;
-            this.Language.Text = "Language";
-            this.Language.UseVisualStyleBackColor = true;
-            // 
-            // LangComboBox
-            // 
-            this.LangComboBox.FormattingEnabled = true;
-            this.LangComboBox.Location = new System.Drawing.Point(104, 50);
-            this.LangComboBox.Name = "LangComboBox";
-            this.LangComboBox.Size = new System.Drawing.Size(325, 21);
-            this.LangComboBox.TabIndex = 0;
-            this.LangComboBox.SelectedIndexChanged += new System.EventHandler(this.LangComboBox_SelectedIndexChanged);
-            // 
-            // LangLabel
-            // 
-            this.LangLabel.AutoSize = true;
-            this.LangLabel.Location = new System.Drawing.Point(8, 53);
-            this.LangLabel.Name = "LangLabel";
-            this.LangLabel.Size = new System.Drawing.Size(90, 13);
-            this.LangLabel.TabIndex = 1;
-            this.LangLabel.Text = "Choose language";
-            // 
-            // OpenLangPacks
-            // 
-            this.OpenLangPacks.Location = new System.Drawing.Point(289, 77);
-            this.OpenLangPacks.Name = "OpenLangPacks";
-            this.OpenLangPacks.Size = new System.Drawing.Size(140, 36);
-            this.OpenLangPacks.TabIndex = 2;
-            this.OpenLangPacks.Text = "Open my langugage packs folder";
-            this.OpenLangPacks.UseVisualStyleBackColor = true;
-            this.OpenLangPacks.Click += new System.EventHandler(this.OpenLangPacks_Click);
             // 
             // SettingsForm
             // 
