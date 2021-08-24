@@ -1,7 +1,7 @@
 # EDIC
 Elite:Dangerous Inara connector
 
-Connect your data to Inara with this app. WARNING: this app in development and not complete.
+Connect your data to Inara with this app.
 
 # How to use
 1. Open Elite dangerous
