@@ -178,7 +178,14 @@ namespace EDIC
                         ShipJSON = LastLoadoutInfo;
                         ShipID = LastLoadoutInfo.ShipId;
                         ship = LastLoadoutInfo.Ship;
-                        ShipLink.Text = LastLoadoutInfo.Ship[0].ToString().ToUpper() + LastLoadoutInfo.Ship.Substring(1, LastLoadoutInfo.Ship.Length - 1);
+                        if (LastLoadoutInfo.ShipName == "")
+                        {
+                            ShipLink.Text = LastLoadoutInfo.Ship[0].ToString().ToUpper() + LastLoadoutInfo.Ship.Substring(1, LastLoadoutInfo.Ship.Length - 1);
+                        }
+                        else
+                        {
+                            ShipLink.Text = LastLoadoutInfo.ShipName;
+                        }
                     }
                     else
                     {
@@ -197,7 +204,14 @@ namespace EDIC
                         ShipID = ev.ShipId;
                         ShipJSON = ev;
                         ship = ev.Ship[0].ToString().ToUpper() + ev.Ship.Substring(1, ev.Ship.Length - 1);
-                        ShipLink.Text = ev.Ship[0].ToString().ToUpper() + ev.Ship.Substring(1, ev.Ship.Length - 1);
+                        if (ev.ShipName == "")
+                        {
+                            ShipLink.Text = ev.Ship[0].ToString().ToUpper() + ev.Ship.Substring(1, ev.Ship.Length - 1);
+                        }
+                        else
+                        {
+                            ShipLink.Text = ev.ShipName;
+                        }
                     }));
                 };
                 api.Events.ShipyardTransferEvent += (send, ev) =>
@@ -246,6 +260,18 @@ namespace EDIC
                         SysLink.Text = ev.StarSystem;
                         StarSystem = ev.StarSystem;
                     }));
+                    if (config.DiscordRpc)
+                    {
+                        client.SetPresence(new RichPresence()
+                        {
+                            Details = lang.lang["DISCORD_RPC_PLAYINGED"],
+                            State = lang.lang["DISCORD_RPC_INSYSTEM"] + ev.StarSystem,
+                            Assets = new Assets()
+                            {
+                                LargeImageKey = "sidewinder",
+                            }
+                        });
+                    }
                 };
                 api.Events.UndockedEvent += (send, ev) =>
                 {

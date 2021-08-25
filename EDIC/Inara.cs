@@ -62,7 +62,7 @@ namespace EDIC
         public Header(bool isDeveloped, string APIkey, string commanderName, string commanderFrontierID)
         {
             this.appName = "Elite:Dangerous Inara connector";
-            this.appVersion = "0.0.8";
+            this.appVersion = "1.0.0";
             this.isDeveloped = isDeveloped;
             this.APIkey = APIkey;
             this.commanderName = commanderName;
