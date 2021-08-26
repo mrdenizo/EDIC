@@ -20,6 +20,7 @@ namespace EDIC
             logger = File.CreateText("InaraLog " + GetTimeStamp() + ".log");
             Closed = true;
             Thread t = new Thread(() => SendPacageWaiting());
+            t.Start();
         }
         private string GetTimeStamp()
         {

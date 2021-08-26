@@ -34,8 +34,13 @@ namespace EDIC
         private void Form1_Load(object sender, EventArgs e)
         {
             //loading
-            LoadApp();
             LoadTranslation();
+            if (System.Diagnostics.Process.GetProcessesByName(this.Text).Length > 1)
+            {
+                MessageBox.Show("EDIC process is already running", "Warning", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                this.Close();
+            }
+            LoadApp();
         }
 
         private void LoadTranslation()
@@ -479,8 +484,14 @@ namespace EDIC
 
         private void EDICmainForm_FormClosing(object sender, FormClosingEventArgs e)
         {
-            api.Stop();
-            inara.CloseLogger();
+            if (api != null)
+            {
+                api.Stop();
+            }
+            if (inara != null)
+            {
+                inara.CloseLogger();
+            }
         }
 
         private string HMS()
