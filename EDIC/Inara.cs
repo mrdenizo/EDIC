@@ -37,7 +37,7 @@ namespace EDIC
             sw.Close();
             WebResponse response = request.GetResponse();
             string dat = new StreamReader(response.GetResponseStream(), true).ReadToEnd();
-            logger.Write("Sent: " + JsonConvert.SerializeObject(package) + "\nRecived: " + dat);
+            logger.Write("Sent: " + JsonConvert.SerializeObject(package) + "\nRecived: " + dat + "\n");
             response.Close();
         }
     }
@@ -62,7 +62,7 @@ namespace EDIC
         public Header(bool isDeveloped, string APIkey, string commanderName, string commanderFrontierID)
         {
             this.appName = "Elite:Dangerous Inara connector";
-            this.appVersion = "1.0.0";
+            this.appVersion = "1.0.2";
             this.isDeveloped = isDeveloped;
             this.APIkey = APIkey;
             this.commanderName = commanderName;

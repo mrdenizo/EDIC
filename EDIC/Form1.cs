@@ -178,7 +178,7 @@ namespace EDIC
                         ShipJSON = LastLoadoutInfo;
                         ShipID = LastLoadoutInfo.ShipId;
                         ship = LastLoadoutInfo.Ship;
-                        if (LastLoadoutInfo.ShipName == "")
+                        if (string.IsNullOrWhiteSpace(LastLoadoutInfo.ShipName))
                         {
                             ShipLink.Text = LastLoadoutInfo.Ship[0].ToString().ToUpper() + LastLoadoutInfo.Ship.Substring(1, LastLoadoutInfo.Ship.Length - 1);
                         }
@@ -204,7 +204,7 @@ namespace EDIC
                         ShipID = ev.ShipId;
                         ShipJSON = ev;
                         ship = ev.Ship[0].ToString().ToUpper() + ev.Ship.Substring(1, ev.Ship.Length - 1);
-                        if (ev.ShipName == "")
+                        if (string.IsNullOrWhiteSpace(ev.ShipName))
                         {
                             ShipLink.Text = ev.Ship[0].ToString().ToUpper() + ev.Ship.Substring(1, ev.Ship.Length - 1);
                         }
