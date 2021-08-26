@@ -245,6 +245,14 @@ namespace EDIC
                         inara.SendPakage(package);
                     }
                 };
+                api.Events.MaterialCollectedEvent += (send, ev) =>
+                {
+                    if (config.DataToInara)
+                    {
+                        Package package = new Package(new Header(true, config.InaraApiKey, api.Commander.Commander, config.FrontierID), new InaraEvent[] { new InaraEvent("setCommanderInventoryMaterials", GetTimeStamp(), new SetMaterials(ev.Name, ev.Count)) });
+                        inara.SendPakage(package);
+                    }
+                };
 
                 //traveling events
                 api.Events.FSDJumpEvent += (send, ev) =>
