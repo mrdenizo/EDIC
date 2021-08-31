@@ -5,6 +5,7 @@ using System.Drawing;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Reflection;
 using System.Windows.Forms;
 using EliteAPI;
 using Newtonsoft.Json;
@@ -22,7 +23,7 @@ namespace EDIC
         Inara inara = new Inara();
         private LangPack lang = new LangPack();
         private long ShipID = 0;
-        private int time = 60;
+        //private int time = 60;
         private EliteAPI.Events.LoadoutInfo ShipJSON;
         private string ship = "";
         private string StarSystem;
@@ -34,6 +35,7 @@ namespace EDIC
         private void Form1_Load(object sender, EventArgs e)
         {
             //loading
+            LoadCfg();
             LoadTranslation();
             if (System.Diagnostics.Process.GetProcessesByName(this.Text).Length > 1)
             {
@@ -53,7 +55,7 @@ namespace EDIC
             StarportName.Text = lang.lang["EDICFORM_STATIONLABLESTART"];
         }
 
-        private void LoadApp()
+        private void LoadCfg()
         {
             //reading config
             if (File.Exists("config.json"))
@@ -77,6 +79,10 @@ namespace EDIC
             {
                 Directory.CreateDirectory("Language Packs");
             }
+            if (!Directory.Exists("Plugins"))
+            {
+                Directory.CreateDirectory("Plugins");
+            }
             if (!File.Exists("Language Packs\\English.json"))
             {
                 using (StreamWriter sr = File.CreateText("Language Packs\\English.json"))
@@ -85,6 +91,10 @@ namespace EDIC
                 }
             }
             lang = JsonConvert.DeserializeObject<LangPack>(File.ReadAllText(config.ChoosenLanguage));
+        }
+
+        private void LoadApp()
+        {
             api = new EliteDangerousAPI(new DirectoryInfo(config.JournalPath));
             api.Start(false);
             if (api.Commander != null)
@@ -128,7 +138,7 @@ namespace EDIC
                         var loacation = JsonConvert.DeserializeObject<EliteAPI.Events.LocationInfo>(line);
                         var dockEvent = JsonConvert.DeserializeObject<EliteAPI.Events.DockedInfo>(line);
                         var undockEvent = JsonConvert.DeserializeObject<EliteAPI.Events.UndockedInfo>(line);
-                        if (loadout.Modules != null)
+                        if (loadout.Ship != null && loadout.Modules != null)
                         {
                             LastLoadoutInfo = loadout;
                             LastRightJSON = line;
@@ -228,6 +238,24 @@ namespace EDIC
                     }
                 };
 
+                //For plugins event
+                api.Events.AllEvent += (send, ev) =>
+                {
+                    if (!Directory.Exists("Plugins"))
+                    {
+                        Directory.CreateDirectory("Plugins");
+                    }
+                    foreach(string file in Directory.GetFiles("Plugins"))
+                    {
+                        Assembly assembly = Assembly.LoadFile(file);
+                        foreach(Type t in assembly.GetExportedTypes())
+                        {
+                            var c = Activator.CreateInstance(t);
+                            t.InvokeMember("Main", BindingFlags.InvokeMethod, null, c, new object[] { ev });
+                        }
+                    }
+                };
+
                 //materials event
                 api.Events.MaterialsEvent += (send, ev) =>
                 {
@@ -254,7 +282,28 @@ namespace EDIC
                 {
                     if (config.DataToInara)
                     {
-                        Package package = new Package(new Header(true, config.InaraApiKey, api.Commander.Commander, config.FrontierID), new InaraEvent[] { new InaraEvent("setCommanderInventoryMaterials", GetTimeStamp(), new SetMaterials(ev.Name, ev.Count)) });
+                        Package package = new Package(new Header(true, config.InaraApiKey, api.Commander.Commander, config.FrontierID), new InaraEvent[] { new InaraEvent("addCommanderInventoryMaterialsItem", GetTimeStamp(), new SetMaterials(ev.Name, ev.Count)) });
+                        inara.SendPakage(package);
+                    }
+                };
+                api.Events.MaterialTradeEvent += (send, ev) => 
+                {
+                    if (config.DataToInara)
+                    {
+                        Package package = new Package(new Header(true, config.InaraApiKey, api.Commander.Commander, config.FrontierID), new InaraEvent[] { new InaraEvent("delCommanderInventoryMaterialsItem", GetTimeStamp(), new SetMaterials(ev.Paid.Material, ev.Paid.Quantity)), new InaraEvent("addCommanderInventoryMaterialsItem", GetTimeStamp(), new SetMaterials(ev.Received.Material, ev.Received.Quantity)) });
+                        inara.SendPakage(package);
+                    }
+                };
+                api.Events.EngineerCraftEvent += (send, ev) =>
+                {
+                    if (config.DataToInara)
+                    {
+                        List<SetMaterials> mats = new List<SetMaterials>();
+                        foreach(var mat in ev.Ingredients)
+                        {
+                            mats.Add(new SetMaterials(mat.Name, mat.Count));
+                        }
+                        Package package = new Package(new Header(true, config.InaraApiKey, api.Commander.Commander, config.FrontierID), new InaraEventMultyply[] { new InaraEventMultyply("delCommanderInventoryMaterialsItem", GetTimeStamp(), mats.ToArray()) });
                         inara.SendPakage(package);
                     }
                 };
@@ -334,6 +383,10 @@ namespace EDIC
                     {
                         Package package = new Package(new Header(true, config.InaraApiKey, api.Commander.Commander, config.FrontierID), new InaraEvent[] { new InaraEvent("addCommanderTravelDock", GetTimeStamp(), new DockedToStation(ev.StarSystem, ev.StationName, ev.MarketId, ship, ShipID)) });
                         inara.SendPakage(package);
+                    }
+                    if (config.Eddn)
+                    {
+                        
                     }
                 };
 
@@ -478,8 +531,9 @@ namespace EDIC
 
         private string GetTimeStamp()
         {
-            string time = $"{DateTime.Today.Year}-{DateTime.Today.Month}-{DateTime.Today.Day}T{DateTime.Now.Hour}:{DateTime.Now.Minute}:{DateTime.Now.Second}Z";
-            return time;
+            return DateTime.UtcNow.ToString("yyyy-MM-ddTHH:mm:ssZ");
+            //string time = $"{DateTime.Today.Year}-{DateTime.Today.Month}-{DateTime.Today.Day}T{DateTime.Now.Hour}:{DateTime.Now.Minute}:{DateTime.Now.Second}Z";
+            //return time;
         }
 
         private void EDICmainForm_FormClosing(object sender, FormClosingEventArgs e)
@@ -556,6 +610,7 @@ namespace EDIC
             form.ShowDialog();
             config = form.cfg;
             ConfigSaver.SaveCfg(config);
+            LoadCfg();
             api.Stop();
             api = null;
             LoadApp();

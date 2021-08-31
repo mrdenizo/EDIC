@@ -15,21 +15,47 @@ namespace EDIC
         private StreamWriter logger;
         private List<Package> packages = new List<Package>();
         private bool Closed = false;
+        public Thread t;
         public Inara()
         {
             logger = File.CreateText("InaraLog " + GetTimeStamp() + ".log");
-            Closed = true;
-            Thread t = new Thread(() => SendPacageWaiting());
+            Closed = false;
+            t = new Thread(() => SendPacageWaiting());
             t.Start();
         }
         private string GetTimeStamp()
         {
+            //return DateTime.UtcNow.ToString("yyyy-MM-ddTHH:mm:ssZ");
             string time = $"{DateTime.Today.Year}.{DateTime.Today.Month}.{DateTime.Today.Day} {DateTime.Now.Hour}-{DateTime.Now.Minute}-{DateTime.Now.Second}";
             return time;
         }
         public void CloseLogger()
         {
             Closed = true;
+            if (packages.Count != 0)
+            {
+                List<AInaraEvent> allevents = new List<AInaraEvent>();
+                foreach (Package package in packages)
+                {
+                    foreach (AInaraEvent @event in package.events)
+                    {
+                        allevents.Add(@event);
+                    }
+                }
+                Package gigapackage = new Package(packages[0].header, allevents.ToArray());
+                WebRequest request = WebRequest.Create("https://inara.cz/inapi/v1/");
+                request.Method = "POST";
+                request.ContentType = "application/json";
+                byte[] data = Encoding.UTF8.GetBytes(JsonConvert.SerializeObject(gigapackage));
+                request.ContentLength = data.Length;
+                StreamWriter sw = new StreamWriter(request.GetRequestStream());
+                sw.Write(JsonConvert.SerializeObject(gigapackage));
+                sw.Close();
+                WebResponse response = request.GetResponse();
+                string dat = new StreamReader(response.GetResponseStream(), true).ReadToEnd();
+                logger.Write("Sent: " + JsonConvert.SerializeObject(gigapackage) + "\nRecived: " + dat + "\n");
+                response.Close();
+            }
             logger.Close();
         }
         public void SendPakage(Package package)
@@ -54,7 +80,6 @@ namespace EDIC
             {
                 if (packages.Count != 0)
                 {
-                    Thread.Sleep(60000);
                     List<AInaraEvent> allevents = new List<AInaraEvent>();
                     foreach(Package package in packages)
                     {
@@ -76,6 +101,7 @@ namespace EDIC
                     string dat = new StreamReader(response.GetResponseStream(), true).ReadToEnd();
                     logger.Write("Sent: " + JsonConvert.SerializeObject(gigapackage) + "\nRecived: " + dat + "\n");
                     response.Close();
+                    Thread.Sleep(60000);
                 }
                 else
                 {
@@ -105,7 +131,7 @@ namespace EDIC
         public Header(bool isDeveloped, string APIkey, string commanderName, string commanderFrontierID)
         {
             this.appName = "Elite:Dangerous Inara connector";
-            this.appVersion = "1.1.0";
+            this.appVersion = "1.1.1";
             this.isDeveloped = isDeveloped;
             this.APIkey = APIkey;
             this.commanderName = commanderName;

@@ -67,7 +67,7 @@ namespace EDIC
         public LoadOutData data;
         public ToSLEF(string ShipType, EliteAPI.Events.LoadoutInfo info)
         {
-            this.header = new ShipHeader("Elite:Dangerous Inara connector", "1.1.0", "https://github.com/mrdenizo/EDIC");
+            this.header = new ShipHeader("Elite:Dangerous Inara connector", "1.1.1", "https://github.com/mrdenizo/EDIC");
             List<Module> modules = new List<Module>();
             foreach(EliteAPI.Events.Module module in info.Modules)
             {
