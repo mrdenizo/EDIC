@@ -27,18 +27,18 @@ namespace EDcombatHeler
         private SpeechSynthesizer speech = new SpeechSynthesizer();
         public void Main(dynamic Event)
         {
-            speech.SelectVoice("Microsoft Irina Desktop");
+            speech.SelectVoice("Put speech SpeechSynthesizer");
             if((string)GetPropertyFromDynamic(Event, "event") == "ShipTargeted")
             {
                 if((int)GetPropertyFromDynamic(Event, "ScanStage") > 2)
                 {
                     if((string)GetPropertyFromDynamic(Event, "LegalStatus") == "Clean")
                     {
-                        speech.Speak("Этот чист");
+                        speech.Speak("Ship is clean");
                     }
                     if((string)GetPropertyFromDynamic(Event, "LegalStatus") == "Wanted")
                     {
-                        speech.Speak("За этого есть награда, размер " + (string)GetPropertyFromDynamic(Event, "Bounty"));
+                        speech.Speak("Bounty ship detected, size " + (string)GetPropertyFromDynamic(Event, "Bounty"));
                     }
                 }
             }
