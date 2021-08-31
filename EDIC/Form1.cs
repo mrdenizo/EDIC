@@ -5,6 +5,7 @@ using System.Drawing;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Web.Configuration;
 using System.Reflection;
 using System.Windows.Forms;
 using EliteAPI;
@@ -247,11 +248,20 @@ namespace EDIC
                     }
                     foreach(string file in Directory.GetFiles("Plugins"))
                     {
-                        Assembly assembly = Assembly.LoadFile(file);
-                        foreach(Type t in assembly.GetExportedTypes())
+                        FullTrustAssembliesSection section = new FullTrustAssembliesSection();
+                        Assembly assembly = Assembly.LoadFile(Path.Combine(Directory.GetCurrentDirectory(), file));
+                        bool b = assembly.IsFullyTrusted;
+                        foreach (Type t in assembly.GetExportedTypes())
                         {
-                            var c = Activator.CreateInstance(t);
-                            t.InvokeMember("Main", BindingFlags.InvokeMethod, null, c, new object[] { ev });
+                            try
+                            {
+                                var c = Activator.CreateInstance(t);
+                                t.InvokeMember("Main", BindingFlags.InvokeMethod, null, c, new object[] { ev });
+                            }
+                            catch
+                            {
+
+                            }
                         }
                     }
                 };
