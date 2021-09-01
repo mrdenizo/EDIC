@@ -26,7 +26,7 @@ namespace EDcombatHeler
         private SpeechSynthesizer speech = new SpeechSynthesizer();
         public void Main(dynamic Event)
         {
-            speech.SelectVoice("Microsoft Irina Desktop");
+            speech.SelectVoice("some SpeechSynthesizer");
             speech.Rate = 2;
             if((string)GetPropertyFromDynamic(Event, "event") == "ShipTargeted")
             {
@@ -34,15 +34,15 @@ namespace EDcombatHeler
                 {
                     if((string)GetPropertyFromDynamic(Event, "LegalStatus") == "Clean")
                     {
-                        speech.Speak("Этот корабль чист");
+                        speech.Speak("Ship is clear");
                     }
                     if((string)GetPropertyFromDynamic(Event, "LegalStatus") == "Wanted")
                     {
-                        speech.Speak("Этот корабль в розыске, награда " + (string)GetPropertyFromDynamic(Event, "Bounty") + " кр");
+                        speech.Speak("Ship has bounty, count " + (string)GetPropertyFromDynamic(Event, "Bounty") + " кр");
                     }
                     if((string)GetPropertyFromDynamic(Event, "LegalStatus") == "Hunter")
                     {
-                        speech.Speak("За этот корабль есть ордер, награда " + (string)GetPropertyFromDynamic(Event, "Bounty") + " кр");
+                        speech.Speak("Ship has bouty in other sys, count " + (string)GetPropertyFromDynamic(Event, "Bounty") + " кр");
                     }
                 }
             }
