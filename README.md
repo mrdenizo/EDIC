@@ -15,9 +15,8 @@ Entrypoint method in dll is Main, args: name: "Event" type: "dynamic"
 Code example(used nuget packages: System.Speech, Dynamitey, ElitAPI):
 ```c#
 using System;
+using System.Threading.Tasks;
 using System.Speech.Synthesis;
-using EliteAPI.Events;
-using EliteAPI;
 using Dynamitey;
 
 namespace EDcombatHeler
@@ -27,18 +26,23 @@ namespace EDcombatHeler
         private SpeechSynthesizer speech = new SpeechSynthesizer();
         public void Main(dynamic Event)
         {
-            speech.SelectVoice("Put speech SpeechSynthesizer");
+            speech.SelectVoice("Microsoft Irina Desktop");
+            speech.Rate = 2;
             if((string)GetPropertyFromDynamic(Event, "event") == "ShipTargeted")
             {
-                if((int)GetPropertyFromDynamic(Event, "ScanStage") > 2)
+                if(GetPropertyFromDynamic(Event, "ScanStage") != null && (int)GetPropertyFromDynamic(Event, "ScanStage") > 2)
                 {
                     if((string)GetPropertyFromDynamic(Event, "LegalStatus") == "Clean")
                     {
-                        speech.Speak("Ship is clean");
+                        speech.Speak("Этот корабль чист");
                     }
                     if((string)GetPropertyFromDynamic(Event, "LegalStatus") == "Wanted")
                     {
-                        speech.Speak("Bounty ship detected, size " + (string)GetPropertyFromDynamic(Event, "Bounty"));
+                        speech.Speak("Этот корабль в розыске, награда " + (string)GetPropertyFromDynamic(Event, "Bounty") + " кр");
+                    }
+                    if((string)GetPropertyFromDynamic(Event, "LegalStatus") == "Hunter")
+                    {
+                        speech.Speak("За этот корабль есть ордер, награда " + (string)GetPropertyFromDynamic(Event, "Bounty") + " кр");
                     }
                 }
             }
