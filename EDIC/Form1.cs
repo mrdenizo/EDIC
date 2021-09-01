@@ -248,19 +248,32 @@ namespace EDIC
                     }
                     foreach(string file in Directory.GetFiles("Plugins"))
                     {
-                        FullTrustAssembliesSection section = new FullTrustAssembliesSection();
-                        Assembly assembly = Assembly.LoadFile(Path.Combine(Directory.GetCurrentDirectory(), file));
-                        bool b = assembly.IsFullyTrusted;
-                        foreach (Type t in assembly.GetExportedTypes())
+                        if (Path.GetExtension(file) == ".dll")
                         {
-                            try
+                            FullTrustAssembliesSection section = new FullTrustAssembliesSection();
+                            Assembly assembly = Assembly.LoadFile(Path.Combine(Directory.GetCurrentDirectory(), file));
+                            bool b = assembly.IsFullyTrusted;
+                            foreach (Type t in assembly.GetExportedTypes())
                             {
-                                var c = Activator.CreateInstance(t);
-                                t.InvokeMember("Main", BindingFlags.InvokeMethod, null, c, new object[] { ev });
-                            }
-                            catch
-                            {
-
+                                try
+                                {
+                                    var c = Activator.CreateInstance(t);
+                                    t.InvokeMember("Main", BindingFlags.InvokeMethod, null, c, new object[] { ev });
+                                }
+                                catch(Exception e)
+                                {
+                                    int FileID = 1;
+                                    for(int i = 0; ; i++)
+                                    {
+                                        if (!File.Exists("CrashReport_" + i))
+                                        {
+                                            FileID = i;
+                                            break;
+                                        }
+                                    }
+                                    StreamWriter sw = File.CreateText("CrashReport_"  + FileID);
+                                    sw.Write($"Crash report {GetTimeStamp()}:\n{e.Message}, more info:\n{e.StackTrace}");
+                                }
                             }
                         }
                     }
