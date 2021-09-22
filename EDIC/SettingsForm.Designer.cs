@@ -32,6 +32,8 @@ namespace EDIC
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(SettingsForm));
             this.tabControl1 = new System.Windows.Forms.TabControl();
             this.Other = new System.Windows.Forms.TabPage();
+            this.ExpotType = new System.Windows.Forms.Label();
+            this.comboBox1 = new System.Windows.Forms.ComboBox();
             this.EDDNcheck = new System.Windows.Forms.CheckBox();
             this.UseRichPresence = new System.Windows.Forms.CheckBox();
             this.OpenDialogButton = new System.Windows.Forms.Button();
@@ -51,8 +53,6 @@ namespace EDIC
             this.LangComboBox = new System.Windows.Forms.ComboBox();
             this.OkButton = new System.Windows.Forms.Button();
             this.folderBrowserDialog1 = new System.Windows.Forms.FolderBrowserDialog();
-            this.comboBox1 = new System.Windows.Forms.ComboBox();
-            this.ExpotType = new System.Windows.Forms.Label();
             this.tabControl1.SuspendLayout();
             this.Other.SuspendLayout();
             this.InaraSettings.SuspendLayout();
@@ -86,10 +86,30 @@ namespace EDIC
             this.Other.Text = "Settings";
             this.Other.UseVisualStyleBackColor = true;
             // 
+            // ExpotType
+            // 
+            this.ExpotType.AutoSize = true;
+            this.ExpotType.Location = new System.Drawing.Point(89, 144);
+            this.ExpotType.Name = "ExpotType";
+            this.ExpotType.Size = new System.Drawing.Size(64, 13);
+            this.ExpotType.TabIndex = 6;
+            this.ExpotType.Text = "Export Type";
+            // 
+            // comboBox1
+            // 
+            this.comboBox1.FormattingEnabled = true;
+            this.comboBox1.Items.AddRange(new object[] {
+            "Coriolis",
+            "EDSY"});
+            this.comboBox1.Location = new System.Drawing.Point(171, 141);
+            this.comboBox1.Name = "comboBox1";
+            this.comboBox1.Size = new System.Drawing.Size(127, 21);
+            this.comboBox1.TabIndex = 5;
+            this.comboBox1.SelectedIndexChanged += new System.EventHandler(this.comboBox1_SelectedIndexChanged);
+            // 
             // EDDNcheck
             // 
             this.EDDNcheck.AutoSize = true;
-            this.EDDNcheck.Enabled = false;
             this.EDDNcheck.Location = new System.Drawing.Point(92, 118);
             this.EDDNcheck.Name = "EDDNcheck";
             this.EDDNcheck.Size = new System.Drawing.Size(206, 17);
@@ -266,27 +286,6 @@ namespace EDIC
             // folderBrowserDialog1
             // 
             this.folderBrowserDialog1.RootFolder = System.Environment.SpecialFolder.UserProfile;
-            // 
-            // comboBox1
-            // 
-            this.comboBox1.FormattingEnabled = true;
-            this.comboBox1.Items.AddRange(new object[] {
-            "Coriolis",
-            "EDSY"});
-            this.comboBox1.Location = new System.Drawing.Point(171, 141);
-            this.comboBox1.Name = "comboBox1";
-            this.comboBox1.Size = new System.Drawing.Size(127, 21);
-            this.comboBox1.TabIndex = 5;
-            this.comboBox1.SelectedIndexChanged += new System.EventHandler(this.comboBox1_SelectedIndexChanged);
-            // 
-            // ExpotType
-            // 
-            this.ExpotType.AutoSize = true;
-            this.ExpotType.Location = new System.Drawing.Point(89, 144);
-            this.ExpotType.Name = "ExpotType";
-            this.ExpotType.Size = new System.Drawing.Size(64, 13);
-            this.ExpotType.TabIndex = 6;
-            this.ExpotType.Text = "Export Type";
             // 
             // SettingsForm
             // 

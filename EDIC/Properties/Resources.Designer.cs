@@ -59,5 +59,15 @@ namespace EDIC.Properties {
                 resourceCulture = value;
             }
         }
+        
+        /// <summary>
+        ///   Поиск локализованного ресурса типа System.Byte[].
+        /// </summary>
+        internal static byte[] Market_schema {
+            get {
+                object obj = ResourceManager.GetObject("Market_schema", resourceCulture);
+                return ((byte[])(obj));
+            }
+        }
     }
 }

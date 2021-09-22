@@ -12,6 +12,7 @@ using EliteAPI;
 using Newtonsoft.Json;
 using DiscordRPC;
 using System.IO;
+using Newtonsoft.Json.Linq;
 
 namespace EDIC
 {
@@ -21,18 +22,20 @@ namespace EDIC
         {
             InitializeComponent();
         }
-        Inara inara = new Inara();
+        private Inara inara = new Inara();
+        private Eddn eddn = new Eddn();
+
         private LangPack lang = new LangPack();
         private long ShipID = 0;
-        //private int time = 60;
         private EliteAPI.Events.LoadoutInfo ShipJSON;
         private string ship = "";
         private string StarSystem;
         private string StarPort;
         public Config config;
         private EliteDangerousAPI api;
-        private RichPresence presence = new RichPresence();
         private DiscordRpcClient client;
+        private cAPI capi;
+
         private void Form1_Load(object sender, EventArgs e)
         {
             //loading
@@ -96,6 +99,14 @@ namespace EDIC
 
         private void LoadApp()
         {
+            OAuth2 auth = OAuth2.Load();
+            if (auth == null || !auth.Refresh())
+            {
+                var req = OAuth2.Authorize();
+                auth = req.GetAuth();
+            }
+            auth.Save();
+            capi = new cAPI(auth);
             api = new EliteDangerousAPI(new DirectoryInfo(config.JournalPath));
             api.Start(false);
             if (api.Commander != null)
@@ -238,7 +249,6 @@ namespace EDIC
                         inara.SendPakage(package);
                     }
                 };
-
                 //For plugins event
                 api.Events.AllEvent += (send, ev) =>
                 {
@@ -409,7 +419,84 @@ namespace EDIC
                     }
                     if (config.Eddn)
                     {
-                        
+                        if (auth == null || !auth.Refresh())
+                        {
+                            var req = OAuth2.Authorize();
+                            auth = req.GetAuth();
+                        }
+                        capi = new cAPI(auth);
+                        var a = capi.GetMarket();
+                        List<Eddn.EddnPackage.Message.Economies> economies = new List<Eddn.EddnPackage.Message.Economies>();
+                        List<Eddn.EddnPackage.Message.Commodities> commodities = new List<Eddn.EddnPackage.Message.Commodities>();
+                        foreach(EliteAPI.Events.StationEconomy economy in ev.StationEconomies)
+                        {
+                            economies.Add(new Eddn.EddnPackage.Message.Economies() { name = economy.Name, proportion = economy.Proportion });
+                        }
+                        foreach (JObject commodity in a["commodities"])
+                        {
+                            Eddn.EddnPackage.Message.Commodities commodities1 = new Eddn.EddnPackage.Message.Commodities();
+                            commodities1 = new Eddn.EddnPackage.Message.Commodities()
+                            {
+                                name = commodity["name"].ToString(),
+                                meanPrice = long.Parse(commodity["meanPrice"].ToString()),
+                                buyPrice = long.Parse(commodity["buyPrice"].ToString()),
+                                stock = long.Parse(commodity["stock"].ToString()),
+                                sellPrice = long.Parse(commodity["sellPrice"].ToString()),
+                                demand = long.Parse(commodity["demand"].ToString())
+                            };
+                            switch (int.Parse(commodity["stockBracket"].ToString()))
+                            {
+                                case 0:
+                                    commodities1.stockBracket = Eddn.EddnPackage.Message.Commodities.StockBracket.zero0;
+                                    break;
+                                case 1:
+                                    commodities1.stockBracket = Eddn.EddnPackage.Message.Commodities.StockBracket.one1;
+                                    break;
+                                case 2:
+                                    commodities1.stockBracket = Eddn.EddnPackage.Message.Commodities.StockBracket.two2;
+                                    break;
+                                case 3:
+                                    commodities1.stockBracket = Eddn.EddnPackage.Message.Commodities.StockBracket.three3;
+                                    break;
+                            }
+                            switch (int.Parse(commodity["demandBracket"].ToString()))
+                            {
+                                case 0:
+                                    commodities1.stockBracket = Eddn.EddnPackage.Message.Commodities.StockBracket.zero0;
+                                    break;
+                                case 1:
+                                    commodities1.stockBracket = Eddn.EddnPackage.Message.Commodities.StockBracket.one1;
+                                    break;
+                                case 2:
+                                    commodities1.stockBracket = Eddn.EddnPackage.Message.Commodities.StockBracket.two2;
+                                    break;
+                                case 3:
+                                    commodities1.stockBracket = Eddn.EddnPackage.Message.Commodities.StockBracket.three3;
+                                    break;
+                            }
+                            commodities.Add(commodities1);
+                        }
+
+                        Eddn.EddnPackage package = new Eddn.EddnPackage()
+                        {
+                            schemaRefVar = @"https://eddn.edcd.io/schemas/commodity/3/test",
+                            header = new Eddn.EddnPackage.Header()
+                            {
+                                uploaderID = config.FrontierID,
+                                softwareName = "Elite:Dangerous Inara connector",
+                                softwareVersion = "1.2.0",
+                            },
+                            message = new Eddn.EddnPackage.Message()
+                            {
+                                systemName = api.Location.StarSystem,
+                                stationName = ev.StationName,
+                                marketId = ev.MarketId,
+                                timestamp = DateTime.UtcNow,
+                                commodities = commodities.ToArray(),
+                                economies = economies.ToArray()
+                            }
+                        };
+                        eddn.SendPackage(package);
                     }
                 };
 
@@ -555,8 +642,6 @@ namespace EDIC
         private string GetTimeStamp()
         {
             return DateTime.UtcNow.ToString("yyyy-MM-ddTHH:mm:ssZ");
-            //string time = $"{DateTime.Today.Year}-{DateTime.Today.Month}-{DateTime.Today.Day}T{DateTime.Now.Hour}:{DateTime.Now.Minute}:{DateTime.Now.Second}Z";
-            //return time;
         }
 
         private void EDICmainForm_FormClosing(object sender, FormClosingEventArgs e)
@@ -568,6 +653,10 @@ namespace EDIC
             if (inara != null)
             {
                 inara.CloseLogger();
+            }
+            if (eddn != null)
+            {
+                eddn.CloseLogger();
             }
         }
 
