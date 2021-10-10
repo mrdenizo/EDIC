@@ -479,7 +479,7 @@ namespace EDIC
 
                         Eddn.EddnPackage package = new Eddn.EddnPackage()
                         {
-                            schemaRefVar = @"https://eddn.edcd.io/schemas/commodity/3/test",
+                            schemaRefVar = @"https://eddn.edcd.io/schemas/commodity/3",
                             header = new Eddn.EddnPackage.Header()
                             {
                                 uploaderID = config.FrontierID,
