@@ -38,11 +38,11 @@ namespace EDcombatHeler
                     }
                     if((string)GetPropertyFromDynamic(Event, "LegalStatus") == "Wanted")
                     {
-                        speech.Speak("Ship has bounty, count " + (string)GetPropertyFromDynamic(Event, "Bounty") + " кр");
+                        speech.Speak("Ship has bounty, count " + (string)GetPropertyFromDynamic(Event, "Bounty") + " cr");
                     }
                     if((string)GetPropertyFromDynamic(Event, "LegalStatus") == "Hunter")
                     {
-                        speech.Speak("Ship has bouty in other sys, count " + (string)GetPropertyFromDynamic(Event, "Bounty") + " кр");
+                        speech.Speak("Ship has bouty in other sys, count " + (string)GetPropertyFromDynamic(Event, "Bounty") + " cr");
                     }
                 }
             }
