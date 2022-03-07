@@ -15,6 +15,7 @@ namespace EDCSLogreader
         public Location Location { private set; get; } = new Location();
         public DirectoryInfo journalDirectory { private set; get; }
         public CommonEventsInvoke Events = new CommonEventsInvoke();
+        private bool Enabled;
         private FileSystemWatcher watcher;
         private StreamReader sr;
         public EliteDangerousAPI(DirectoryInfo journalDirectory)
@@ -25,6 +26,7 @@ namespace EDCSLogreader
         }
         public void Start() 
         {
+            Enabled = true;
             while (!sr.EndOfStream)
             {
                 string s = sr.ReadLine();
@@ -90,9 +92,20 @@ namespace EDCSLogreader
                 }
             }
             sr.ReadToEnd();
-            watcher.Changed += (s, e) =>
+            /*watcher.Changed += (s, e) =>
             {
-                while (!sr.EndOfStream)
+                
+            };*/
+            Events.RaiseRankEvent(this, Commander.Ranks);
+            new System.Threading.Thread(() => ThreadP()).Start();
+            //watcher.EnableRaisingEvents = true;
+        }
+
+        private void ThreadP()
+        {
+            while (Enabled)
+            {
+                if (!sr.EndOfStream)
                 {
                     string even = sr.ReadLine();
                     CommonEvent ev = JsonConvert.DeserializeObject<CommonEvent>(even);
@@ -206,13 +219,14 @@ namespace EDCSLogreader
                     }
                     Events.RaiseAllEvent(this, even);
                 }
-            };
-            Events.RaiseRankEvent(this, Commander.Ranks);
-            watcher.EnableRaisingEvents = true;
+                System.Threading.Thread.Sleep(250);
+            }
         }
+
         public void Stop()
         {
-            watcher.EnableRaisingEvents = false;
+            //watcher.EnableRaisingEvents = false;
+            Enabled = false;
             sr.Close();
         }
 

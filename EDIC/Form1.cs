@@ -393,7 +393,6 @@ namespace EDIC
                 //traveling events
                 api.Events.FSDJumpEvent += (send, ev) =>
                 {
-                    //var keys = api.Commander.Statistics.BankAccount.Keys;
                     if (config.DataToInara)
                     {
                         Package package = new Package(new Header(false, config.InaraApiKey, api.Commander.Commander, api.Commander.FrontierID), new InaraEvent[] { new InaraEvent("addCommanderTravelFSDJump", GetTimeStamp(), new TravelFSDjump(ev.StarSystem, ev.StarPos.ToArray(), ev.JumpDist, ship, ShipID)) });
