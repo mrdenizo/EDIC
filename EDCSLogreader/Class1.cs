@@ -204,7 +204,7 @@ namespace EDCSLogreader
                         ShipyardSellInfo info = JsonConvert.DeserializeObject<ShipyardSellInfo>(even);
                         Events.RaiseShipyardSellEvent(this, info);
                     }
-                    Events.RaiseAllEvent(this, JsonConvert.DeserializeObject(even));
+                    Events.RaiseAllEvent(this, even);
                 }
             };
             Events.RaiseRankEvent(this, Commander.Ranks);
@@ -315,8 +315,8 @@ namespace EDCSLogreader
 
 
             public event AllEventHalder AllEvent;
-            public delegate void AllEventHalder(object sender, dynamic e);
-            internal void RaiseAllEvent(object sender, dynamic e) => AllEvent?.Invoke(sender, e);
+            public delegate void AllEventHalder(object sender, string e);
+            internal void RaiseAllEvent(object sender, string e) => AllEvent?.Invoke(sender, e);
         }
     }
     public class CommanderE
@@ -387,7 +387,7 @@ namespace EDCSLogreader
         public class DockedInfo : CommonEvent
         {
             public string StationName;
-            public bool Taxi;
+            //public bool Taxi;
             public bool Multicrew;
             public string StarSystem;
             [JsonProperty("MarketID")]
@@ -405,7 +405,7 @@ namespace EDCSLogreader
         }
         public class FSDJumpInfo : CommonEvent
         {
-            public bool Taxi;
+            //public bool Taxi;
             public bool Multicrew;
             public string StarSystem;
             public long SystemAddress;
@@ -462,7 +462,7 @@ namespace EDCSLogreader
         public class UndockedInfo : CommonEvent
         {
             public string StationName;
-            public bool Taxi;
+            //public bool Taxi;
             public bool Multicrew;
             public long MarketID;
         }

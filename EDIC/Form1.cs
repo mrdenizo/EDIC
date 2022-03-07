@@ -24,11 +24,11 @@ namespace EDIC
         }
         private Inara inara = new Inara();
         private Eddn eddn = new Eddn();
-        public static string AppVer = "";
+        public static string AppVer = "2.1.0";
         private LangPack lang = new LangPack();
         private long ShipID = 0;
         private EDCSLogreader.Events.LoadoutInfo ShipJSON;
-        private string ship = "2.0.0";
+        private string ship = "";
         private string StarSystem;
         private string StarPort;
         public Config config;
@@ -247,7 +247,7 @@ namespace EDIC
                 }
                 if (config.DataToInara)
                 {
-                    Package WealthPackage = new Package(new Header(true, config.InaraApiKey, api.Commander.Commander, api.Commander.FrontierID), new InaraEvent[] { new InaraEvent("setCommanderCredits", GetTimeStamp(), new CreditsEvent(api.Commander.Credits, api.Commander.Assets)) });
+                    Package WealthPackage = new Package(new Header(false, config.InaraApiKey, api.Commander.Commander, api.Commander.FrontierID), new InaraEvent[] { new InaraEvent("setCommanderCredits", GetTimeStamp(), new CreditsEvent(api.Commander.Credits, api.Commander.Assets)) });
                     inara.SendPakage(WealthPackage);
                 }
                 //event hold
@@ -270,7 +270,7 @@ namespace EDIC
                     }));
                     if (config.DataToInara)
                     {
-                        Package package = new Package(new Header(true, config.InaraApiKey, api.Commander.Commander, api.Commander.FrontierID), new InaraEvent[] { new InaraEvent("setCommanderShipLoadout", GetTimeStamp(), new SetShipLoadout(ev.Ship, ev.ShipId, ev.Modules.ToArray())) });
+                        Package package = new Package(new Header(false, config.InaraApiKey, api.Commander.Commander, api.Commander.FrontierID), new InaraEvent[] { new InaraEvent("setCommanderShipLoadout", GetTimeStamp(), new SetShipLoadout(ev.Ship, ev.ShipId, ev.Modules.ToArray())) });
                         inara.SendPakage(package);
                     }
                 };
@@ -278,7 +278,7 @@ namespace EDIC
                 {
                     if (config.DataToInara)
                     {
-                        Package package = new Package(new Header(true, config.InaraApiKey, api.Commander.Commander, api.Commander.FrontierID), new InaraEvent[] { new InaraEvent("addCommanderShip", GetTimeStamp(), new AddCmdrShip(ev.ShipType, ev.NewShipID)) });
+                        Package package = new Package(new Header(false, config.InaraApiKey, api.Commander.Commander, api.Commander.FrontierID), new InaraEvent[] { new InaraEvent("addCommanderShip", GetTimeStamp(), new AddCmdrShip(ev.ShipType, ev.NewShipID)) });
                         inara.SendPakage(package);
                     }
                 };
@@ -286,7 +286,7 @@ namespace EDIC
                 {
                     if (config.DataToInara)
                     {
-                        Package package = new Package(new Header(true, config.InaraApiKey, api.Commander.Commander, api.Commander.FrontierID), new InaraEvent[] { new InaraEvent("delCommanderShip", GetTimeStamp(), new DelCmdrShip(ev.ShipType, ev.SellShipID)) });
+                        Package package = new Package(new Header(false, config.InaraApiKey, api.Commander.Commander, api.Commander.FrontierID), new InaraEvent[] { new InaraEvent("delCommanderShip", GetTimeStamp(), new DelCmdrShip(ev.ShipType, ev.SellShipID)) });
                         inara.SendPakage(package);
                     }
                 };
@@ -294,7 +294,7 @@ namespace EDIC
                 {
                     if (config.DataToInara)
                     {
-                        Package package = new Package(new Header(true, config.InaraApiKey, api.Commander.Commander, api.Commander.FrontierID), new InaraEvent[] { new InaraEvent("setCommanderShipTransfer", GetTimeStamp(), new ShipTransfer(ev.ShipType, ev.ShipId, api.Location.StarSystem, api.Location.Station)) });
+                        Package package = new Package(new Header(false, config.InaraApiKey, api.Commander.Commander, api.Commander.FrontierID), new InaraEvent[] { new InaraEvent("setCommanderShipTransfer", GetTimeStamp(), new ShipTransfer(ev.ShipType, ev.ShipId, api.Location.StarSystem, api.Location.Station)) });
                         inara.SendPakage(package);
                     }
                 };
@@ -356,7 +356,7 @@ namespace EDIC
                         {
                             materials.Add(new SetMaterials(r.Name, r.Count));
                         }
-                        Package package = new Package(new Header(true, config.InaraApiKey, api.Commander.Commander, api.Commander.FrontierID), new InaraEventMultyply[] { new InaraEventMultyply("setCommanderInventoryMaterials", GetTimeStamp(), materials.ToArray()) });
+                        Package package = new Package(new Header(false, config.InaraApiKey, api.Commander.Commander, api.Commander.FrontierID), new InaraEventMultyply[] { new InaraEventMultyply("setCommanderInventoryMaterials", GetTimeStamp(), materials.ToArray()) });
                         inara.SendPakage(package);
                     }
                 };
@@ -364,7 +364,7 @@ namespace EDIC
                 {
                     if (config.DataToInara)
                     {
-                        Package package = new Package(new Header(true, config.InaraApiKey, api.Commander.Commander, api.Commander.FrontierID), new InaraEvent[] { new InaraEvent("addCommanderInventoryMaterialsItem", GetTimeStamp(), new SetMaterials(ev.Name, ev.Count)) });
+                        Package package = new Package(new Header(false, config.InaraApiKey, api.Commander.Commander, api.Commander.FrontierID), new InaraEvent[] { new InaraEvent("addCommanderInventoryMaterialsItem", GetTimeStamp(), new SetMaterials(ev.Name, ev.Count)) });
                         inara.SendPakage(package);
                     }
                 };
@@ -372,7 +372,7 @@ namespace EDIC
                 {
                     if (config.DataToInara)
                     {
-                        Package package = new Package(new Header(true, config.InaraApiKey, api.Commander.Commander, api.Commander.FrontierID), new InaraEvent[] { new InaraEvent("delCommanderInventoryMaterialsItem", GetTimeStamp(), new SetMaterials(ev.Paid.Material, ev.Paid.Quantity)), new InaraEvent("addCommanderInventoryMaterialsItem", GetTimeStamp(), new SetMaterials(ev.Received.Material, ev.Received.Quantity)) });
+                        Package package = new Package(new Header(false, config.InaraApiKey, api.Commander.Commander, api.Commander.FrontierID), new InaraEvent[] { new InaraEvent("delCommanderInventoryMaterialsItem", GetTimeStamp(), new SetMaterials(ev.Paid.Material, ev.Paid.Quantity)), new InaraEvent("addCommanderInventoryMaterialsItem", GetTimeStamp(), new SetMaterials(ev.Received.Material, ev.Received.Quantity)) });
                         inara.SendPakage(package);
                     }
                 };
@@ -385,7 +385,7 @@ namespace EDIC
                         {
                             mats.Add(new SetMaterials(mat.Name, mat.Count));
                         }
-                        Package package = new Package(new Header(true, config.InaraApiKey, api.Commander.Commander, api.Commander.FrontierID), new InaraEventMultyply[] { new InaraEventMultyply("delCommanderInventoryMaterialsItem", GetTimeStamp(), mats.ToArray()) });
+                        Package package = new Package(new Header(false, config.InaraApiKey, api.Commander.Commander, api.Commander.FrontierID), new InaraEventMultyply[] { new InaraEventMultyply("delCommanderInventoryMaterialsItem", GetTimeStamp(), mats.ToArray()) });
                         inara.SendPakage(package);
                     }
                 };
@@ -396,7 +396,7 @@ namespace EDIC
                     //var keys = api.Commander.Statistics.BankAccount.Keys;
                     if (config.DataToInara)
                     {
-                        Package package = new Package(new Header(true, config.InaraApiKey, api.Commander.Commander, api.Commander.FrontierID), new InaraEvent[] { new InaraEvent("addCommanderTravelFSDJump", GetTimeStamp(), new TravelFSDjump(ev.StarSystem, ev.StarPos.ToArray(), ev.JumpDist, ship, ShipID)) });
+                        Package package = new Package(new Header(false, config.InaraApiKey, api.Commander.Commander, api.Commander.FrontierID), new InaraEvent[] { new InaraEvent("addCommanderTravelFSDJump", GetTimeStamp(), new TravelFSDjump(ev.StarSystem, ev.StarPos.ToArray(), ev.JumpDist, ship, ShipID)) });
                         inara.SendPakage(package);
                     }
                     SysLink.Invoke(new Action(() =>
@@ -475,7 +475,7 @@ namespace EDIC
                     }));
                     if (config.DataToInara)
                     {
-                        Package package = new Package(new Header(true, config.InaraApiKey, api.Commander.Commander, api.Commander.FrontierID), new InaraEvent[] { new InaraEvent("addCommanderTravelDock", GetTimeStamp(), new DockedToStation(ev.StarSystem, ev.StationName, ev.MarketId, ship, ShipID)) });
+                        Package package = new Package(new Header(false, config.InaraApiKey, api.Commander.Commander, api.Commander.FrontierID), new InaraEvent[] { new InaraEvent("addCommanderTravelDock", GetTimeStamp(), new DockedToStation(ev.StarSystem, ev.StationName, ev.MarketId, ship, ShipID)) });
                         inara.SendPakage(package);
                     }
                     if (config.Eddn)
@@ -566,7 +566,7 @@ namespace EDIC
                 {
                     if (config.DataToInara)
                     {
-                        Package package = new Package(new Header(true, config.InaraApiKey, api.Commander.Commander, api.Commander.FrontierID), new InaraEventMultyply[]
+                        Package package = new Package(new Header(false, config.InaraApiKey, api.Commander.Commander, api.Commander.FrontierID), new InaraEventMultyply[]
                         {
                             new InaraEventMultyply("setCommanderRankPilot", GetTimeStamp(), new PilotRankEvent[]
                             {
@@ -587,7 +587,7 @@ namespace EDIC
                 {
                     if (config.DataToInara)
                     {
-                        Package package = new Package(new Header(true, config.InaraApiKey, api.Commander.Commander, api.Commander.FrontierID), new InaraEventMultyply[]
+                        Package package = new Package(new Header(false, config.InaraApiKey, api.Commander.Commander, api.Commander.FrontierID), new InaraEventMultyply[]
                         {
                             new InaraEventMultyply("setCommanderReputationMajorFaction", GetTimeStamp(), new MajorFractionRep[]
                             {
@@ -603,7 +603,7 @@ namespace EDIC
                 {
                     if (config.DataToInara)
                     {
-                        Package package = new Package(new Header(true, config.InaraApiKey, api.Commander.Commander, api.Commander.FrontierID), new InaraEventMultyply[]
+                        Package package = new Package(new Header(false, config.InaraApiKey, api.Commander.Commander, api.Commander.FrontierID), new InaraEventMultyply[]
                         {
                             new InaraEventMultyply("setCommanderRankPilot", GetTimeStamp(), new PilotRankEvent[]
                             {
@@ -629,7 +629,7 @@ namespace EDIC
                         {
                             ranks.Add(new EngineerRank(r.Engineer, r.Progress, r.RankProgress));
                         }
-                        Package package = new Package(new Header(true, config.InaraApiKey, api.Commander.Commander, api.Commander.FrontierID), new InaraEventMultyply[] { new InaraEventMultyply("setCommanderRankEngineer", GetTimeStamp(), ranks.ToArray()) });
+                        Package package = new Package(new Header(false, config.InaraApiKey, api.Commander.Commander, api.Commander.FrontierID), new InaraEventMultyply[] { new InaraEventMultyply("setCommanderRankEngineer", GetTimeStamp(), ranks.ToArray()) });
                         inara.SendPakage(package);
                     }
                 };
@@ -639,7 +639,7 @@ namespace EDIC
                 {
                     if (config.DataToInara)
                     {
-                        Package package = new Package(new Header(true, config.InaraApiKey, api.Commander.Commander, api.Commander.FrontierID), new InaraEvent[] { new InaraEvent("addCommanderCombatInterdictionEscape", GetTimeStamp(), new EscapedInterection(api.Location.StarSystem, ev.Interdictor, ev.IsPlayer)) });
+                        Package package = new Package(new Header(false, config.InaraApiKey, api.Commander.Commander, api.Commander.FrontierID), new InaraEvent[] { new InaraEvent("addCommanderCombatInterdictionEscape", GetTimeStamp(), new EscapedInterection(api.Location.StarSystem, ev.Interdictor, ev.IsPlayer)) });
                         inara.SendPakage(package);
                     }
                 };
@@ -647,7 +647,7 @@ namespace EDIC
                 {
                     if (config.DataToInara)
                     {
-                        Package package = new Package(new Header(true, config.InaraApiKey, api.Commander.Commander, api.Commander.FrontierID), new InaraEvent[] { new InaraEvent("addCommanderCombatInterdiction", GetTimeStamp(), new GotInterected(api.Location.StarSystem, ev.Interdicted, ev.IsPlayer, ev.Success)) });
+                        Package package = new Package(new Header(false, config.InaraApiKey, api.Commander.Commander, api.Commander.FrontierID), new InaraEvent[] { new InaraEvent("addCommanderCombatInterdiction", GetTimeStamp(), new GotInterected(api.Location.StarSystem, ev.Interdicted, ev.IsPlayer, ev.Success)) });
                         inara.SendPakage(package);
                     }
                 };
@@ -655,7 +655,7 @@ namespace EDIC
                 {
                     if(config.DataToInara)
                     {
-                        Package package = new Package(new Header(true, config.InaraApiKey, api.Commander.Commander, api.Commander.FrontierID), new InaraEvent[] { new InaraEvent("addCommanderCombatInterdicted", GetTimeStamp(), new GotInterected(api.Location.StarSystem, ev.Interdictor, ev.IsPlayer, ev.Submitted)) });
+                        Package package = new Package(new Header(false, config.InaraApiKey, api.Commander.Commander, api.Commander.FrontierID), new InaraEvent[] { new InaraEvent("addCommanderCombatInterdicted", GetTimeStamp(), new GotInterected(api.Location.StarSystem, ev.Interdictor, ev.IsPlayer, ev.Submitted)) });
                         inara.SendPakage(package);
                     }
                 };
@@ -663,7 +663,7 @@ namespace EDIC
                 {
                     if (config.DataToInara)
                     {
-                        Package package = new Package(new Header(true, config.InaraApiKey, api.Commander.Commander, api.Commander.FrontierID), new InaraEvent[] { new InaraEvent("addCommanderCombatDeath", GetTimeStamp(), new CombatDeath(api.Location.StarSystem, ev.KillerName)) });
+                        Package package = new Package(new Header(false, config.InaraApiKey, api.Commander.Commander, api.Commander.FrontierID), new InaraEvent[] { new InaraEvent("addCommanderCombatDeath", GetTimeStamp(), new CombatDeath(api.Location.StarSystem, ev.KillerName)) });
                         inara.SendPakage(package);
                     }
                 };
@@ -671,7 +671,7 @@ namespace EDIC
                 {
                     if (config.DataToInara)
                     {
-                        Package package = new Package(new Header(true, config.InaraApiKey, api.Commander.Commander, api.Commander.FrontierID), new InaraEvent[] { new InaraEvent("addCommanderCombatKill", GetTimeStamp(), new CommanderPVPkill(api.Location.StarSystem, ev.Victim)) });
+                        Package package = new Package(new Header(false, config.InaraApiKey, api.Commander.Commander, api.Commander.FrontierID), new InaraEvent[] { new InaraEvent("addCommanderCombatKill", GetTimeStamp(), new CommanderPVPkill(api.Location.StarSystem, ev.Victim)) });
                         inara.SendPakage(package);
                     }
                 };

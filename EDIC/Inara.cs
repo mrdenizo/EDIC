@@ -105,6 +105,7 @@ namespace EDIC
                     }
                     logger.Write("Sent: " + JsonConvert.SerializeObject(gigapackage) + "\nRecived: " + dat + "\n");
                     response.Close();
+                    packages.Clear();
                 }
             };
             while (!Closed)

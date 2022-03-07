@@ -30,7 +30,7 @@ namespace EDIC
             {
                 logger = File.CreateText("EddnLog " + GetTimeStamp() + ".log");
             }
-            WebRequest request = WebRequest.Create("https://eddn.edcd.io:4430/upload/test");
+            WebRequest request = WebRequest.Create("https://eddn.edcd.io:4430/upload/");
             request.Method = "POST";
             request.ContentType = "application/json";
             byte[] data = Encoding.UTF8.GetBytes(JsonConvert.SerializeObject(package).Replace("schemaRefVar", "$schemaRef"));
