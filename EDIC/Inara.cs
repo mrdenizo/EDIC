@@ -23,7 +23,8 @@ namespace EDIC
         }
         private string GetTimeStamp()
         {
-            string time = $"{DateTime.Today.Year}.{DateTime.Today.Month}.{DateTime.Today.Day} {DateTime.Now.Hour}-{DateTime.Now.Minute}-{DateTime.Now.Second}";
+            //string time = $"{DateTime.Today.Year}.{DateTime.Today.Month}.{DateTime.Today.Day} {DateTime.Now.Hour}-{DateTime.Now.Minute}-{DateTime.Now.Second}";
+            string time = DateTime.Now.ToString("yyyy-MM-ddTHH\\:mm\\:ss.fffffffzzz");
             return time;
         }
         public void CloseLogger()
@@ -72,14 +73,16 @@ namespace EDIC
         }
         private void SendPacageWaiting()
         {
-            while (!Closed)
+            System.Timers.Timer SendTimer = new System.Timers.Timer(61000);
+            SendTimer.Start();
+            SendTimer.Elapsed += (sender, e) =>
             {
                 if (packages.Count != 0)
                 {
                     List<AInaraEvent> allevents = new List<AInaraEvent>();
-                    foreach(Package package in packages)
+                    foreach (Package package in packages)
                     {
-                        foreach(AInaraEvent @event in package.events)
+                        foreach (AInaraEvent @event in package.events)
                         {
                             allevents.Add(@event);
                         }
@@ -102,13 +105,13 @@ namespace EDIC
                     }
                     logger.Write("Sent: " + JsonConvert.SerializeObject(gigapackage) + "\nRecived: " + dat + "\n");
                     response.Close();
-                    Thread.Sleep(60000);
                 }
-                else
-                {
-                    Thread.Sleep(100);
-                }
+            };
+            while (!Closed)
+            {
+                Thread.Sleep(100);
             }
+            SendTimer.Stop();
         }
     }
     public class Package
@@ -132,7 +135,7 @@ namespace EDIC
         public Header(bool isDeveloped, string APIkey, string commanderName, string commanderFrontierID)
         {
             this.appName = "Elite:Dangerous Inara connector";
-            this.appVersion = "1.2.0";
+            this.appVersion = EDICmainForm.AppVer;
             this.isDeveloped = isDeveloped;
             this.APIkey = APIkey;
             this.commanderName = commanderName;
@@ -189,7 +192,7 @@ namespace EDIC
         public float rankProgress;
         public PilotRankEvent(RankName rankName, float rankProgress, long rankValue)
         {
-            switch (rankName)
+            /*switch (rankName)
             {
                 case RankName.combat:
                     this.rankName = "combat";
@@ -209,7 +212,8 @@ namespace EDIC
                 case RankName.empire:
                     this.rankName = "empire";
                     break;
-            }
+            }*/
+            this.rankName = rankName.ToString();
             this.rankValue = rankValue;
             this.rankProgress = rankProgress;
         }
@@ -218,6 +222,8 @@ namespace EDIC
             combat,
             trade,
             explore,
+            soldier,
+            exobiologist,
             cqc,
             federation,
             empire
@@ -285,16 +291,44 @@ namespace EDIC
         public long shipGameID;
         public string starsystemName;
         public string stationName;
-        public long marketID;
-        public long transferTime;
-        public ShipTransfer(string shipType, long shipGameID, string starsystemName, string stationName, long marketID, long transferTime)
+        public ShipTransfer(string shipType, long shipGameID, string starsystemName, string stationName)
         {
             this.shipType = shipType;
             this.shipGameID = shipGameID;
             this.starsystemName = starsystemName;
             this.stationName = stationName;
-            this.marketID = marketID;
-            this.transferTime = transferTime;
+        }
+    }
+    public class AddCmdrShip : IEventData 
+    {
+        public string shipType;
+        public long shipGameID;
+        public AddCmdrShip(string shipType, long shipGameID)
+        {
+            this.shipType = shipType;
+            this.shipGameID = shipGameID;
+        }
+    }
+    public class DelCmdrShip : IEventData
+    {
+        public string shipType;
+        public long shipGameID;
+        public DelCmdrShip(string shipType, long shipGameID)
+        {
+            this.shipType = shipType;
+            this.shipGameID = shipGameID;
+        }
+    }
+    public class SetShipLoadout : IEventData
+    {
+        public string shipType;
+        public int shipGameID;
+        public EDCSLogreader.Events.LoadoutInfo.Module[] shipLoadout;
+        public SetShipLoadout(string shipType, int shipGameID, EDCSLogreader.Events.LoadoutInfo.Module[] shipLoadout)
+        {
+            this.shipType = shipType;
+            this.shipGameID = shipGameID;
+            this.shipLoadout = shipLoadout;
         }
     }
 
@@ -375,8 +409,8 @@ namespace EDIC
     public  class SetMaterials : IEventData
     {
         public string itemName;
-        public long itemCount;
-        public SetMaterials(string itemName, long itemCount)
+        public int itemCount;
+        public SetMaterials(string itemName, int itemCount)
         {
             this.itemName = itemName;
             this.itemCount = itemCount;

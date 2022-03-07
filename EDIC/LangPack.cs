@@ -38,8 +38,8 @@ namespace EDIC
 
             lang.Add("SETTINGSFORM_INARAAPIKEYLABEL", "Inara API key"); //Inara API key text
             lang.Add("SETTINGSFORM_GETMYINARAAPIKYLINK", "Get my Inara API key"); //Get my inara API key link text
-            lang.Add("SETTINGSFORM_FRONTIERIDLABEL", "Frontier ID"); //Frontier ID text
-            lang.Add("SETTINGSFORM_GETMYFROMTIERIDLINK", "Get my frontier ID"); //Get my frontier ID key link text
+            //lang.Add("SETTINGSFORM_FRONTIERIDLABEL", "Frontier ID"); //Frontier ID text
+            //lang.Add("SETTINGSFORM_GETMYFROMTIERIDLINK", "Get my frontier ID"); //Get my frontier ID key link text
             lang.Add("SETTINGSFORM_CHECK_SENDINARA", "Send my data to Inara.cz"); //Send my data to Inara checkbox
 
             lang.Add("SETTINGSFORM_CHOOSELANGUAGELABEL", "Choose language"); //Choose langugage text

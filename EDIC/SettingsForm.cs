@@ -21,7 +21,7 @@ namespace EDIC
             this.cfg = cfg;
             InitializeComponent();
             InaraApi.Text = cfg.InaraApiKey;
-            FrontierId.Text = cfg.FrontierID;
+            //FrontierId.Text = cfg.FrontierID;
             JournalPath.Text = cfg.JournalPath;
             InaraCheck.Checked = cfg.DataToInara;
             UseRichPresence.Checked = cfg.DiscordRpc;
@@ -41,8 +41,8 @@ namespace EDIC
             EDDNcheck.Text = lang.lang["SETTINGSFORM_CHECK_SENDDATATOEDDN"];
             ApiKeyLabel.Text = lang.lang["SETTINGSFORM_INARAAPIKEYLABEL"];
             InaraLink.Text = lang.lang["SETTINGSFORM_GETMYINARAAPIKYLINK"];
-            FrontierIdLabel.Text = lang.lang["SETTINGSFORM_FRONTIERIDLABEL"];
-            FrontierIDlink.Text = lang.lang["SETTINGSFORM_GETMYFROMTIERIDLINK"];
+            //FrontierIdLabel.Text = lang.lang["SETTINGSFORM_FRONTIERIDLABEL"];
+            //FrontierIDlink.Text = lang.lang["SETTINGSFORM_GETMYFROMTIERIDLINK"];
             InaraCheck.Text = lang.lang["SETTINGSFORM_CHECK_SENDINARA"];
             LangLabel.Text = lang.lang["SETTINGSFORM_CHOOSELANGUAGELABEL"];
             OpenLangPacks.Text = lang.lang["SETTINGSFORM_OPENMYPACKAGEFOLDER"];
@@ -75,7 +75,7 @@ namespace EDIC
 
         private void SettingsForm_FormClosing(object sender, FormClosingEventArgs e)
         {
-            cfg.FrontierID = FrontierId.Text;
+            //cfg.FrontierID = FrontierId.Text;
             cfg.InaraApiKey = InaraApi.Text;
             cfg.JournalPath = JournalPath.Text;
             cfg.DataToInara = InaraCheck.Checked;

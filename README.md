@@ -1,7 +1,7 @@
 # EDIC
 Elite:Dangerous Inara connector
 
-Connect your data to Inara with this app.
+Connect your data to Inara and EDDN with this app.
 
 # How to use
 1. Open Elite dangerous
@@ -12,7 +12,7 @@ Connect your data to Inara with this app.
 # Plugins help
 Entrypoint method in dll is Main, args: name: "Event" type: "dynamic"
 
-Code example(used nuget packages: System.Speech, Dynamitey, ElitAPI):
+Code example(used nuget packages: System.Speech, Dynamitey):
 ```c#
 using System;
 using System.Threading.Tasks;

@@ -7,6 +7,7 @@ using System.Text;
 using Newtonsoft.Json;
 using System.Web;
 using System.Threading.Tasks;
+using EDCSLogreader;
 
 namespace EDIC
 {
@@ -14,7 +15,7 @@ namespace EDIC
     {
         public static class EdsyExport
         {
-            public static string Export(EliteAPI.Events.LoadoutInfo json)
+            public static string Export(Events.LoadoutInfo json)
             {
                 byte[] data = Gziper.Zip(JsonConvert.SerializeObject(json));
                 string str = Convert.ToBase64String(data);
@@ -23,7 +24,7 @@ namespace EDIC
         }
         public static class CoriolisExporter
         {
-            public static string Export(EliteAPI.Events.LoadoutInfo json)
+            public static string Export(Events.LoadoutInfo json)
             {
                 byte[] data = Gziper.Zip(JsonConvert.SerializeObject(json));
                 string str = Convert.ToBase64String(data);
@@ -65,11 +66,11 @@ namespace EDIC
     {
         public ShipHeader header;
         public LoadOutData data;
-        public ToSLEF(string ShipType, EliteAPI.Events.LoadoutInfo info)
+        public ToSLEF(string ShipType, long shipGameID, Events.LoadoutInfo info)
         {
-            this.header = new ShipHeader("Elite:Dangerous Inara connector", "1.2.0", "https://github.com/mrdenizo/EDIC");
+            this.header = new ShipHeader("Elite:Dangerous Inara connector", EDICmainForm.AppVer, "https://github.com/mrdenizo/EDIC");
             List<Module> modules = new List<Module>();
-            foreach(EliteAPI.Events.Module module in info.Modules)
+            foreach(Events.LoadoutInfo.Module module in info.Modules)
             {
                 if(module.Engineering != null)
                 {
@@ -80,7 +81,7 @@ namespace EDIC
                     modules.Add(new ShipModule(module.Slot, module.Item));
                 }
             }
-            this.data = new LoadOutData(ShipType, modules);
+            this.data = new LoadOutData(ShipType, shipGameID, modules);
         }
         public class ShipHeader
         {
@@ -96,49 +97,51 @@ namespace EDIC
         }
         public class LoadOutData
         {
-            public string Ship;
+            public string shipType;
+            public long shipGameID;
             public Module[] Modules;
-            public LoadOutData(string Ship, List<Module> Modules)
+            public LoadOutData(string shipType, long shipGameID, List<Module> Modules)
             {
-                this.Ship = Ship;
+                this.shipType = shipType;
+                this.shipGameID = shipGameID;
                 this.Modules = Modules.ToArray();
             }
         }
         public abstract class Module
         {
-            public string Slot;
-            public string Item;
+            public string slotName;
+            public string itemName;
         }
         public class ShipModule : Module
         {
-            public ShipModule(string Slot, string Item)
+            public ShipModule(string slotName, string itemName)
             {
-                this.Slot = Slot;
-                this.Item = Item;
+                this.slotName = slotName;
+                this.itemName = itemName;
             }
         }
         public class EngineeredModule : Module
         {
-            public EngineeringModule Engineering;
-            public EngineeredModule(string Slot, string Item, EngineeringModule Engineering)
+            public EngineeringModule engineering;
+            public EngineeredModule(string slotName, string itemName, EngineeringModule engineering)
             {
-                this.Slot = Slot;
-                this.Item = Item;
-                this.Engineering = Engineering;
+                this.slotName = slotName;
+                this.itemName = itemName;
+                this.engineering = engineering;
             }
         }
         public class EngineeringModule
         {
-            public string BlueprintName;
-            public long Level;
-            public double Quality;
-            public string ExperimentalEffect;
-            public EngineeringModule(string BlueprintName, long Level, double Quality, string ExperimentalEffect)
+            public string blueprintName;
+            public long blueprintLevel;
+            public double blueprintQuality;
+            public string experimentalEffect;
+            public EngineeringModule(string blueprintName, long blueprintLevel, double blueprintQuality, string experimentalEffect)
             {
-                this.BlueprintName = BlueprintName;
-                this.Level = Level;
-                this.Quality = Quality;
-                this.ExperimentalEffect = ExperimentalEffect;
+                this.blueprintName = blueprintName;
+                this.blueprintLevel = blueprintLevel;
+                this.blueprintQuality = blueprintQuality;
+                this.experimentalEffect = experimentalEffect;
             }
         }
     }

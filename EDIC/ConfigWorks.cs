@@ -10,7 +10,6 @@ namespace EDIC
         //program config
         public string InaraApiKey = "";
         public string JournalPath = "";
-        public string FrontierID = "";
         public bool DataToInara = false;
         public bool DiscordRpc = false;
         public bool Eddn = false;

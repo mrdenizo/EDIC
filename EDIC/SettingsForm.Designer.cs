@@ -178,6 +178,7 @@ namespace EDIC
             this.FrontierIDlink.TabIndex = 6;
             this.FrontierIDlink.TabStop = true;
             this.FrontierIDlink.Text = "Get my frontier ID";
+            this.FrontierIDlink.Visible = false;
             this.FrontierIDlink.LinkClicked += new System.Windows.Forms.LinkLabelLinkClickedEventHandler(this.FrontierIDlink_LinkClicked);
             // 
             // InaraCheck
@@ -198,6 +199,7 @@ namespace EDIC
             this.FrontierIdLabel.Size = new System.Drawing.Size(56, 13);
             this.FrontierIdLabel.TabIndex = 4;
             this.FrontierIdLabel.Text = "Frontier ID";
+            this.FrontierIdLabel.Visible = false;
             // 
             // FrontierId
             // 
@@ -205,6 +207,7 @@ namespace EDIC
             this.FrontierId.Name = "FrontierId";
             this.FrontierId.Size = new System.Drawing.Size(436, 20);
             this.FrontierId.TabIndex = 3;
+            this.FrontierId.Visible = false;
             // 
             // InaraApi
             // 

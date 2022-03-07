@@ -54,7 +54,6 @@ namespace EDIC
                     auth = reqest.GetAuth();
                     auth.Save();
                     this.OAuth = auth;
-                    
                 }
             }
         }
