@@ -10,48 +10,18 @@ Connect your data to Inara and EDDN with this app.
 4. Enjoy
 
 # Plugins help
-Entrypoint method in dll is Main, args: name: "Event" type: "dynamic"
-
-Code example(used nuget packages: System.Speech, Dynamitey):
+> Entrypoint method in dll is Main, event provided as same as in game, code looks like
 ```c#
 using System;
-using System.Threading.Tasks;
-using System.Speech.Synthesis;
-using Dynamitey;
-
-namespace EDcombatHeler
+namespace MyPlugin
 {
-    public class MainClass
+    public class MyPluginClass
     {
-        private SpeechSynthesizer speech = new SpeechSynthesizer();
-        public void Main(dynamic Event)
+        public void Main(string Event)
         {
-            speech.SelectVoice("some SpeechSynthesizer");
-            speech.Rate = 2;
-            if((string)GetPropertyFromDynamic(Event, "event") == "ShipTargeted")
-            {
-                if(GetPropertyFromDynamic(Event, "ScanStage") != null && (int)GetPropertyFromDynamic(Event, "ScanStage") > 2)
-                {
-                    if((string)GetPropertyFromDynamic(Event, "LegalStatus") == "Clean")
-                    {
-                        speech.Speak("Ship is clear");
-                    }
-                    if((string)GetPropertyFromDynamic(Event, "LegalStatus") == "Wanted")
-                    {
-                        speech.Speak("Ship has bounty, count " + (string)GetPropertyFromDynamic(Event, "Bounty") + " cr");
-                    }
-                    if((string)GetPropertyFromDynamic(Event, "LegalStatus") == "Hunter")
-                    {
-                        speech.Speak("Ship has bouty in other sys, count " + (string)GetPropertyFromDynamic(Event, "Bounty") + " cr");
-                    }
-                }
-            }
-        }
-        private object GetPropertyFromDynamic(dynamic d, string val)
-        {
-            var PropetyValue = Dynamic.InvokeGet(d, val);
-            return PropetyValue;
+            
         }
     }
 }
 ```
+> If some dll librarys needed, then they're should putten in EDIC directory, not plugins directory.
