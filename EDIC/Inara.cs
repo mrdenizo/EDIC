@@ -24,7 +24,7 @@ namespace EDIC
         private string GetTimeStamp()
         {
             //string time = $"{DateTime.Today.Year}.{DateTime.Today.Month}.{DateTime.Today.Day} {DateTime.Now.Hour}-{DateTime.Now.Minute}-{DateTime.Now.Second}";
-            string time = DateTime.Now.ToString("yyyy-MM-ddTHH\\:mm\\:ss.fffffffzzz");
+            string time = DateTime.Now.ToString("yyyy.MM.dd HH-mm-ss");
             return time;
         }
         public void CloseLogger()
