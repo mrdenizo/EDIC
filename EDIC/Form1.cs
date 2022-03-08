@@ -24,7 +24,7 @@ namespace EDIC
         }
         private Inara inara = new Inara();
         private Eddn eddn = new Eddn();
-        public static string AppVer = "2.1.1";
+        public static string AppVer = "2.1.2";
         private LangPack lang = new LangPack();
         private long ShipID = 0;
         private EDCSLogreader.Events.LoadoutInfo ShipJSON;
@@ -324,7 +324,7 @@ namespace EDIC
                                     int FileID = 1;
                                     for(int i = 0; ; i++)
                                     {
-                                        if (!File.Exists("CrashReport_" + i))
+                                        if (!File.Exists("CrashReport_" + i + ".txt"))
                                         {
                                             FileID = i;
                                             break;
@@ -332,6 +332,7 @@ namespace EDIC
                                     }
                                     StreamWriter sw = File.CreateText("CrashReport_"  + FileID);
                                     sw.Write($"Crash report {GetTimeStamp()}:\n{e.Message}, more info:\n{e.StackTrace}");
+                                    sw.Close();
                                 }
                             }
                         }
