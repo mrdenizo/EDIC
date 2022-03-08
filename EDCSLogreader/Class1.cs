@@ -96,6 +96,7 @@ namespace EDCSLogreader
             {
                 
             };*/
+            Events.RaiseAllEvent(this, JsonConvert.SerializeObject(new CommanderInfo() { Event = "Commander", FID = Commander.FrontierID, Name = Commander.Commander }));
             Events.RaiseRankEvent(this, Commander.Ranks);
             new System.Threading.Thread(() => ThreadP()).Start();
             //watcher.EnableRaisingEvents = true;
