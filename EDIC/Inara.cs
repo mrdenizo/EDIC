@@ -324,8 +324,8 @@ namespace EDIC
     {
         public string shipType;
         public int shipGameID;
-        public EDCSLogreader.Events.LoadoutInfo.Module[] shipLoadout;
-        public SetShipLoadout(string shipType, int shipGameID, EDCSLogreader.Events.LoadoutInfo.Module[] shipLoadout)
+        public InaraSlefModules.InaraSlefModuleDefault[] shipLoadout;
+        public SetShipLoadout(string shipType, int shipGameID, InaraSlefModules.InaraSlefModuleDefault[] shipLoadout)
         {
             this.shipType = shipType;
             this.shipGameID = shipGameID;

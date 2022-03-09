@@ -62,86 +62,67 @@ namespace EDIC
         }
     }
 
-    public class ToSLEF 
+    public class InaraSlefModules
     {
-        public ShipHeader header;
-        public LoadOutData data;
-        public ToSLEF(string ShipType, long shipGameID, Events.LoadoutInfo info)
+        public InaraSlefModules(EDCSLogreader.Events.LoadoutInfo info)
         {
-            this.header = new ShipHeader("Elite:Dangerous Inara connector", EDICmainForm.AppVer, "https://github.com/mrdenizo/EDIC");
-            List<Module> modules = new List<Module>();
-            foreach(Events.LoadoutInfo.Module module in info.Modules)
+            modules = new List<InaraSlefModuleDefault>();
+            foreach(EDCSLogreader.Events.LoadoutInfo.Module m in info.Modules)
             {
-                if(module.Engineering != null)
-                {
-                    modules.Add(new EngineeredModule(module.Slot, module.Item, new EngineeringModule(module.Engineering.BlueprintName, module.Engineering.Level, module.Engineering.Quality, module.Engineering.ExperimentalEffect)));
-                }
+                if (m.Engineering != null)
+                    modules.Add(new InaraSlefModuleEngineered() { slotName = m.Slot, itemName = m.Item, itemValue = m.Value,
+                    itemHealth = m.Health, isOn = m.On, isHot = info.Hot, itemPriority = m.Priority, itemAmmoClip = m.AmmoInClip, itemAmmoHopper = m.AmmoInHopper, engineering = EngineeringFromLoadout(m)});
                 else
-                {
-                    modules.Add(new ShipModule(module.Slot, module.Item));
-                }
+                modules.Add(new InaraSlefModuleDefault() { slotName = m.Slot, itemName = m.Item, itemValue = m.Value,
+                    itemHealth = m.Health, isOn = m.On, isHot = info.Hot, itemPriority = m.Priority, itemAmmoClip = m.AmmoInClip, itemAmmoHopper = m.AmmoInHopper});
             }
-            this.data = new LoadOutData(ShipType, shipGameID, modules);
         }
-        public class ShipHeader
+        private InaraSlefModuleEngineered.Engineering EngineeringFromLoadout(EDCSLogreader.Events.LoadoutInfo.Module info) 
         {
-            public string appName;
-            public string appVersion;
-            public string appURL;
-            public ShipHeader(string appName, string appVersion, string appURL)
-            {
-                this.appName = appName;
-                this.appVersion = appVersion;
-                this.appURL = appURL;
-            }
+            InaraSlefModuleEngineered.Engineering engineering = new InaraSlefModuleEngineered.Engineering() { blueprintName = info.Engineering.BlueprintName, 
+                blueprintLevel = info.Engineering.Level, blueprintQuality = info.Engineering.Quality, experimentalEffect = info.Engineering.ExperimentalEffect, modifiers = ModifiersFromLoadout(info) };
+            return engineering;
         }
-        public class LoadOutData
+        private InaraSlefModuleEngineered.Engineering.Modifier[] ModifiersFromLoadout(EDCSLogreader.Events.LoadoutInfo.Module info)
         {
-            public string shipType;
-            public long shipGameID;
-            public Module[] Modules;
-            public LoadOutData(string shipType, long shipGameID, List<Module> Modules)
+            List<InaraSlefModuleEngineered.Engineering.Modifier> modifiers = new List<InaraSlefModuleEngineered.Engineering.Modifier>();
+            foreach(EDCSLogreader.Events.LoadoutInfo.EngineeringModifier modifier in info.Engineering.Modifiers)
             {
-                this.shipType = shipType;
-                this.shipGameID = shipGameID;
-                this.Modules = Modules.ToArray();
+                modifiers.Add(new InaraSlefModuleEngineered.Engineering.Modifier() { name = modifier.Label, value = modifier.Value, originalValue = modifier.OriginalValue, lessIsGood = modifier.LessIsGood != 0 });
             }
+            return modifiers.ToArray();
         }
-        public abstract class Module
+
+        public List<InaraSlefModuleDefault> modules;
+        public class InaraSlefModuleDefault
         {
             public string slotName;
             public string itemName;
+            public long itemValue;
+            public double itemHealth;
+            public bool isOn;
+            public bool isHot;
+            public int itemPriority;
+            public int itemAmmoClip;
+            public int itemAmmoHopper;
         }
-        public class ShipModule : Module
+        public class InaraSlefModuleEngineered : InaraSlefModuleDefault
         {
-            public ShipModule(string slotName, string itemName)
+            public Engineering engineering;
+            public class Engineering
             {
-                this.slotName = slotName;
-                this.itemName = itemName;
-            }
-        }
-        public class EngineeredModule : Module
-        {
-            public EngineeringModule engineering;
-            public EngineeredModule(string slotName, string itemName, EngineeringModule engineering)
-            {
-                this.slotName = slotName;
-                this.itemName = itemName;
-                this.engineering = engineering;
-            }
-        }
-        public class EngineeringModule
-        {
-            public string blueprintName;
-            public long blueprintLevel;
-            public double blueprintQuality;
-            public string experimentalEffect;
-            public EngineeringModule(string blueprintName, long blueprintLevel, double blueprintQuality, string experimentalEffect)
-            {
-                this.blueprintName = blueprintName;
-                this.blueprintLevel = blueprintLevel;
-                this.blueprintQuality = blueprintQuality;
-                this.experimentalEffect = experimentalEffect;
+                public string blueprintName;
+                public int blueprintLevel;
+                public float blueprintQuality;
+                public string experimentalEffect;
+                public Modifier[] modifiers;
+                public class Modifier
+                {
+                    public string name;
+                    public float value;
+                    public float originalValue;
+                    public bool lessIsGood;
+                }
             }
         }
     }

@@ -24,7 +24,7 @@ namespace EDIC
         }
         private Inara inara = new Inara();
         private Eddn eddn = new Eddn();
-        public static string AppVer = "2.1.2";
+        public static string AppVer = "2.1.3";
         private LangPack lang = new LangPack();
         private long ShipID = 0;
         private EDCSLogreader.Events.LoadoutInfo ShipJSON;
@@ -270,7 +270,7 @@ namespace EDIC
                     }));
                     if (config.DataToInara)
                     {
-                        Package package = new Package(new Header(false, config.InaraApiKey, api.Commander.Commander, api.Commander.FrontierID), new InaraEvent[] { new InaraEvent("setCommanderShipLoadout", GetTimeStamp(), new SetShipLoadout(ev.Ship, ev.ShipId, ev.Modules.ToArray())) });
+                        Package package = new Package(new Header(false, config.InaraApiKey, api.Commander.Commander, api.Commander.FrontierID), new InaraEvent[] { new InaraEvent("setCommanderShipLoadout", GetTimeStamp(), new SetShipLoadout(ev.Ship, ev.ShipId, new InaraSlefModules(ev).modules.ToArray())) });
                         inara.SendPakage(package);
                     }
                 };
