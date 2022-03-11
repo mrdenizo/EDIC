@@ -355,6 +355,7 @@ namespace EDCSLogreader
         {
             [JsonProperty("event")]
             public string Event;
+            public string timestamp;
         }
         public class CommanderInfo : CommonEvent
         {
