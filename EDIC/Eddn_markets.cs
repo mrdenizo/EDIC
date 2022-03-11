@@ -74,7 +74,8 @@ namespace EDIC
                 public string systemName;
                 public string stationName;
                 public long marketId;
-                public DateTime timestamp;
+                //public DateTime timestamp;
+                public string timestamp;
                 public Commodities[] commodities;
                 public Economies[] economies;
                 public class Commodities

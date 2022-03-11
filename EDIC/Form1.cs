@@ -552,7 +552,7 @@ namespace EDIC
                                 systemName = api.Location.StarSystem,
                                 stationName = ev.StationName,
                                 marketId = ev.MarketId,
-                                timestamp = DateTime.UtcNow,
+                                timestamp = ev.timestamp,
                                 commodities = commodities.ToArray(),
                                 economies = economies.ToArray()
                             }
