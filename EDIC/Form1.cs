@@ -24,7 +24,7 @@ namespace EDIC
         }
         private Inara inara = new Inara();
         private Eddn eddn = new Eddn();
-        public static string AppVer = "2.2.0";
+        public static string AppVer = "2.2.1";
         private LangPack lang = new LangPack();
         private long ShipID = 0;
         private EDCSLogreader.Events.LoadoutInfo ShipJSON;
@@ -487,77 +487,80 @@ namespace EDIC
                         }
                         capi = new cAPI(auth);
                         var a = capi.GetMarket();
-                        List<Eddn.EddnPackage.Message.Economies> economies = new List<Eddn.EddnPackage.Message.Economies>();
-                        List<Eddn.EddnPackage.Message.Commodities> commodities = new List<Eddn.EddnPackage.Message.Commodities>();
-                        foreach(EDCSLogreader.Events.StationEconomy economy in ev.StationEconomies)
+                        if (a.ContainsKey("commodities"))
                         {
-                            economies.Add(new Eddn.EddnPackage.Message.Economies() { name = economy.Name, proportion = economy.Proportion });
-                        }
-                        foreach (JObject commodity in a["commodities"])
-                        {
-                            Eddn.EddnPackage.Message.Commodities commodities1 = new Eddn.EddnPackage.Message.Commodities();
-                            commodities1 = new Eddn.EddnPackage.Message.Commodities()
+                            List<Eddn.EddnPackage.Message.Economies> economies = new List<Eddn.EddnPackage.Message.Economies>();
+                            List<Eddn.EddnPackage.Message.Commodities> commodities = new List<Eddn.EddnPackage.Message.Commodities>();
+                            foreach (EDCSLogreader.Events.StationEconomy economy in ev.StationEconomies)
                             {
-                                name = commodity["name"].ToString(),
-                                meanPrice = long.Parse(commodity["meanPrice"].ToString()),
-                                buyPrice = long.Parse(commodity["buyPrice"].ToString()),
-                                stock = long.Parse(commodity["stock"].ToString()),
-                                sellPrice = long.Parse(commodity["sellPrice"].ToString()),
-                                demand = long.Parse(commodity["demand"].ToString())
-                            };
-                            switch (int.Parse(commodity["stockBracket"].ToString()))
-                            {
-                                case 0:
-                                    commodities1.stockBracket = Eddn.EddnPackage.Message.Commodities.StockBracket.zero0;
-                                    break;
-                                case 1:
-                                    commodities1.stockBracket = Eddn.EddnPackage.Message.Commodities.StockBracket.one1;
-                                    break;
-                                case 2:
-                                    commodities1.stockBracket = Eddn.EddnPackage.Message.Commodities.StockBracket.two2;
-                                    break;
-                                case 3:
-                                    commodities1.stockBracket = Eddn.EddnPackage.Message.Commodities.StockBracket.three3;
-                                    break;
+                                economies.Add(new Eddn.EddnPackage.Message.Economies() { name = economy.Name, proportion = economy.Proportion });
                             }
-                            switch (int.Parse(commodity["demandBracket"].ToString()))
+                            foreach (JObject commodity in a["commodities"])
                             {
-                                case 0:
-                                    commodities1.stockBracket = Eddn.EddnPackage.Message.Commodities.StockBracket.zero0;
-                                    break;
-                                case 1:
-                                    commodities1.stockBracket = Eddn.EddnPackage.Message.Commodities.StockBracket.one1;
-                                    break;
-                                case 2:
-                                    commodities1.stockBracket = Eddn.EddnPackage.Message.Commodities.StockBracket.two2;
-                                    break;
-                                case 3:
-                                    commodities1.stockBracket = Eddn.EddnPackage.Message.Commodities.StockBracket.three3;
-                                    break;
+                                Eddn.EddnPackage.Message.Commodities commodities1 = new Eddn.EddnPackage.Message.Commodities();
+                                commodities1 = new Eddn.EddnPackage.Message.Commodities()
+                                {
+                                    name = commodity["name"].ToString(),
+                                    meanPrice = long.Parse(commodity["meanPrice"].ToString()),
+                                    buyPrice = long.Parse(commodity["buyPrice"].ToString()),
+                                    stock = long.Parse(commodity["stock"].ToString()),
+                                    sellPrice = long.Parse(commodity["sellPrice"].ToString()),
+                                    demand = long.Parse(commodity["demand"].ToString())
+                                };
+                                switch (int.Parse(commodity["stockBracket"].ToString()))
+                                {
+                                    case 0:
+                                        commodities1.stockBracket = Eddn.EddnPackage.Message.Commodities.StockBracket.zero0;
+                                        break;
+                                    case 1:
+                                        commodities1.stockBracket = Eddn.EddnPackage.Message.Commodities.StockBracket.one1;
+                                        break;
+                                    case 2:
+                                        commodities1.stockBracket = Eddn.EddnPackage.Message.Commodities.StockBracket.two2;
+                                        break;
+                                    case 3:
+                                        commodities1.stockBracket = Eddn.EddnPackage.Message.Commodities.StockBracket.three3;
+                                        break;
+                                }
+                                switch (int.Parse(commodity["demandBracket"].ToString()))
+                                {
+                                    case 0:
+                                        commodities1.stockBracket = Eddn.EddnPackage.Message.Commodities.StockBracket.zero0;
+                                        break;
+                                    case 1:
+                                        commodities1.stockBracket = Eddn.EddnPackage.Message.Commodities.StockBracket.one1;
+                                        break;
+                                    case 2:
+                                        commodities1.stockBracket = Eddn.EddnPackage.Message.Commodities.StockBracket.two2;
+                                        break;
+                                    case 3:
+                                        commodities1.stockBracket = Eddn.EddnPackage.Message.Commodities.StockBracket.three3;
+                                        break;
+                                }
+                                commodities.Add(commodities1);
                             }
-                            commodities.Add(commodities1);
-                        }
 
-                        Eddn.EddnPackage package = new Eddn.EddnPackage()
-                        {
-                            schemaRefVar = @"https://eddn.edcd.io/schemas/commodity/3",
-                            header = new Eddn.EddnPackage.Header()
+                            Eddn.EddnPackage package = new Eddn.EddnPackage()
                             {
-                                uploaderID = api.Commander.FrontierID,
-                                softwareName = "Elite:Dangerous Inara connector",
-                                softwareVersion = AppVer,
-                            },
-                            message = new Eddn.EddnPackage.Message()
-                            {
-                                systemName = api.Location.StarSystem,
-                                stationName = ev.StationName,
-                                marketId = ev.MarketId,
-                                timestamp = ev.timestamp,
-                                commodities = commodities.ToArray(),
-                                economies = economies.ToArray()
-                            }
-                        };
-                        eddn.SendPackage(package);
+                                schemaRefVar = @"https://eddn.edcd.io/schemas/commodity/3",
+                                header = new Eddn.EddnPackage.Header()
+                                {
+                                    uploaderID = api.Commander.FrontierID,
+                                    softwareName = "Elite:Dangerous Inara connector",
+                                    softwareVersion = AppVer,
+                                },
+                                message = new Eddn.EddnPackage.Message()
+                                {
+                                    systemName = api.Location.StarSystem,
+                                    stationName = ev.StationName,
+                                    marketId = ev.MarketId,
+                                    timestamp = ev.timestamp,
+                                    commodities = commodities.ToArray(),
+                                    economies = economies.ToArray()
+                                }
+                            };
+                            eddn.SendPackage(package);
+                        }
                     }
                 };
 
