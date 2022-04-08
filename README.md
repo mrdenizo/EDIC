@@ -24,4 +24,4 @@ namespace MyPlugin
     }
 }
 ```
-> If some dll librarys needed, then they're should putten in EDIC directory, not plugins directory.
+> If dll librarys needed for plugins, then they're should putten in EDIC directory, not plugins directory.
