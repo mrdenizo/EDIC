@@ -6,8 +6,10 @@ using System.Data;
 using System.Drawing;
 using System.IO;
 using System.Linq;
+using System.Reflection;
 using System.Text;
 using System.Threading.Tasks;
+using System.Web.Configuration;
 using System.Windows.Forms;
 
 namespace EDIC
@@ -55,11 +57,6 @@ namespace EDIC
             System.Diagnostics.Process.Start("https://inara.cz/settings-api/");
         }
 
-        private void FrontierIDlink_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
-        {
-            System.Diagnostics.Process.Start("https://user.frontierstore.net/user/info");
-        }
-
         private void button1_Click(object sender, EventArgs e)
         {
             this.Close();
@@ -75,7 +72,6 @@ namespace EDIC
 
         private void SettingsForm_FormClosing(object sender, FormClosingEventArgs e)
         {
-            //cfg.FrontierID = FrontierId.Text;
             cfg.InaraApiKey = InaraApi.Text;
             cfg.JournalPath = JournalPath.Text;
             cfg.DataToInara = InaraCheck.Checked;
@@ -95,6 +91,26 @@ namespace EDIC
             LangComboBox.SelectedItem = Path.GetFileNameWithoutExtension(cfg.ChoosenLanguage);
             lang = JsonConvert.DeserializeObject<LangPack>(File.ReadAllText(cfg.ChoosenLanguage));
             LoadTranslation();
+            foreach (string file in Directory.GetFiles("Plugins"))
+            {
+                if (Path.GetExtension(file) == ".dll")
+                {
+                    FullTrustAssembliesSection section = new FullTrustAssembliesSection();
+                    Assembly assembly = Assembly.LoadFile(Path.Combine(Directory.GetCurrentDirectory(), file));
+                    bool b = assembly.IsFullyTrusted;
+                    foreach (Type t in assembly.GetExportedTypes())
+                    {
+                        if(Activator.CreateInstance(t) is UserControl)
+                        {
+                            UserControl control = (UserControl)Activator.CreateInstance(t);
+                            (control).Dock = DockStyle.Fill;
+                            TabPage page = new TabPage(Path.GetFileNameWithoutExtension(file) + " settings");
+                            page.Controls.Add(control);
+                            tabControl1.TabPages.Add(page);
+                        }
+                    }
+                }
+            }
         }
 
         private void OpenLangPacks_Click(object sender, EventArgs e)

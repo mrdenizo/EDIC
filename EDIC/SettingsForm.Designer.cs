@@ -169,18 +169,6 @@ namespace EDIC
             this.InaraSettings.Text = "Inara";
             this.InaraSettings.UseVisualStyleBackColor = true;
             // 
-            // FrontierIDlink
-            // 
-            this.FrontierIDlink.AutoSize = true;
-            this.FrontierIDlink.Location = new System.Drawing.Point(117, 157);
-            this.FrontierIDlink.Name = "FrontierIDlink";
-            this.FrontierIDlink.Size = new System.Drawing.Size(89, 13);
-            this.FrontierIDlink.TabIndex = 6;
-            this.FrontierIDlink.TabStop = true;
-            this.FrontierIDlink.Text = "Get my frontier ID";
-            this.FrontierIDlink.Visible = false;
-            this.FrontierIDlink.LinkClicked += new System.Windows.Forms.LinkLabelLinkClickedEventHandler(this.FrontierIDlink_LinkClicked);
-            // 
             // InaraCheck
             // 
             this.InaraCheck.AutoSize = true;

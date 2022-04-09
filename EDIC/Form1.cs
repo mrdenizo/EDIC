@@ -330,8 +330,8 @@ namespace EDIC
                                             break;
                                         }
                                     }
-                                    StreamWriter sw = File.CreateText("CrashReport_"  + FileID);
-                                    sw.Write($"Crash report {GetTimeStamp()}:\n{e.Message}, more info:\n{e.StackTrace}");
+                                    StreamWriter sw = File.CreateText("CrashReport_"  + FileID + ".txt");
+                                    sw.Write($"Crash report {GetTimeStamp()}:\n{e.Message},\nmore info:\n{e.StackTrace}");
                                     sw.Close();
                                 }
                             }
