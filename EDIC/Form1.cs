@@ -24,7 +24,7 @@ namespace EDIC
         }
         private Inara inara = new Inara();
         private Eddn eddn = new Eddn();
-        public static string AppVer = "2.2.1";
+        public static string AppVer = "2.3.0";
         private LangPack lang = new LangPack();
         private long ShipID = 0;
         private EDCSLogreader.Events.LoadoutInfo ShipJSON;
