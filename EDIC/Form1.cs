@@ -371,7 +371,10 @@ namespace EDIC
                                 try
                                 {
                                     var c = Activator.CreateInstance(t);
-                                    t.InvokeMember("Main", BindingFlags.InvokeMethod, null, c, new object[] { ev });
+                                    if (t.Name == "Program")
+                                    { 
+                                        t.InvokeMember("Main", BindingFlags.InvokeMethod, null, c, new object[] { ev });
+                                    }
                                 }
                                 catch(Exception e)
                                 {
