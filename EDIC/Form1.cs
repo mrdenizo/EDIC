@@ -36,6 +36,48 @@ namespace EDIC
         private DiscordRpcClient client;
         private cAPI capi;
         private DateTime StartTimeStamp = DateTime.UtcNow;
+        private Dictionary<string, string> ShipNamePairs = new Dictionary<string, string>(StringComparer.OrdinalIgnoreCase)
+        {
+            { "SideWinder", "Sidewinder" },
+            { "Eagle", "Eagle" },
+            { "Hauler", "Hauler" },
+            { "Adder", "Adder" },
+            { "Viper", "Viper MkIII" },
+            { "CobraMkIII", "Cobra MkIII" },
+            { "Type6", "Type-6 Transporter" },
+            { "Dolphin", "Dolphin" },
+            { "Type7", "Type-7 Transporter" },
+            { "Asp", "Asp Explorer" },
+            { "Vulture", "Vulture" },
+            { "Empire_Trader", "Imperial Clipper" },
+            { "Federation_Dropship", "Federal Dropship" },
+            { "Orca", "Orca" },
+            { "Type9", "Type-9 Heavy" },
+            { "Python", "Python" },
+            { "BelugaLiner", "Beluga Liner" },
+            { "FerDeLance", "Fer-de-Lance" },
+            { "Anaconda", "Anaconda" },
+            { "Federation_Corvette", "Federal Corvette" },
+            { "Cutter", "Imperial Cutter" },
+            { "DiamondBack", "Diamondback Scout" },
+            { "Empire_Courier", "Imperial Courier" },
+            { "DiamondBackXL", "Diamondback Explorer" },
+            { "Empire_Eagle", "Imperial Eagle" },
+            { "Federation_Dropship_MkII", "Federal Assault Ship" },
+            { "Federation_Gunship", "Federal Gunship" },
+            { "Viper_MkIV", "Viper MkIV" },
+            { "CobraMkIV", "Cobra" },
+            { "Independant_Trader", "Keelback" },
+            { "Asp_Scout", "Asp Scout" },
+            { "Type9_Military", "Type-10" },
+            { "Krait_MkII", "Krait MkII" },
+            { "TypeX", "Alliance Chieftain" },
+            { "TypeX_2", "Alliance Crusader" },
+            { "TypeX_3", "Alliance Challenger" },
+            { "Krait_Light", "Krait Phantom" },
+            { "Mamba", "Mamba" },
+            { "Unknown", "Unknown" }
+        };
 
         private void Form1_Load(object sender, EventArgs e)
         {
@@ -125,10 +167,6 @@ namespace EDIC
                     {
                         State = lang.lang["DISCORD_RPC_PLAYINGED"],
                         Details = "",
-                        Assets = new Assets()
-                        {
-                            LargeImageKey = "sidewinder",
-                        },
                         Timestamps = new Timestamps 
                         {
                             Start = StartTimeStamp,
@@ -192,7 +230,7 @@ namespace EDIC
                                 State = lang.lang["DISCORD_RPC_INSYSTEM"] + api.Location.StarSystem,
                                 Assets = new Assets()
                                 {
-                                    LargeImageKey = "sidewinder",
+                                    LargeImageKey = LastLoadoutInfo.Ship.ToLower(),
                                 },
                                 Timestamps = new Timestamps
                                 {
@@ -214,7 +252,7 @@ namespace EDIC
                                 State = lang.lang["DISCORD_RPC_INSYSTEM"] + api.Location.StarSystem,
                                 Assets = new Assets()
                                 {
-                                    LargeImageKey = "sidewinder",
+                                    LargeImageKey = LastLoadoutInfo.Ship.ToLower(),
                                 },
                                 Timestamps = new Timestamps
                                 {
@@ -230,7 +268,7 @@ namespace EDIC
                         ship = LastLoadoutInfo.Ship;
                         if (string.IsNullOrWhiteSpace(LastLoadoutInfo.ShipName))
                         {
-                            ShipLink.Text = LastLoadoutInfo.Ship[0].ToString().ToUpper() + LastLoadoutInfo.Ship.Substring(1, LastLoadoutInfo.Ship.Length - 1);
+                            ShipLink.Text = ShipNamePairs[LastLoadoutInfo.Ship];
                         }
                         else
                         {
@@ -254,6 +292,22 @@ namespace EDIC
                 //loadout event
                 api.Events.LoadoutEvent += (send, ev) =>
                 {
+                    if (config.DiscordRpc)
+                    {
+                        client.SetPresence(new RichPresence()
+                        {
+                            Details = client.CurrentPresence.Details,
+                            State = client.CurrentPresence.State,
+                            Assets = new Assets()
+                            {
+                                LargeImageKey = ev.Ship.ToLower(),
+                            },
+                            Timestamps = new Timestamps
+                            {
+                                Start = StartTimeStamp,
+                            }
+                        });
+                    }
                     SysLink.Invoke(new Action(() =>
                     {
                         ShipID = ev.ShipId;
@@ -261,7 +315,7 @@ namespace EDIC
                         ship = ev.Ship[0].ToString().ToUpper() + ev.Ship.Substring(1, ev.Ship.Length - 1);
                         if (string.IsNullOrWhiteSpace(ev.ShipName))
                         {
-                            ShipLink.Text = ev.Ship[0].ToString().ToUpper() + ev.Ship.Substring(1, ev.Ship.Length - 1);
+                            ShipLink.Text = ShipNamePairs[ev.Ship];
                         }
                         else
                         {
@@ -412,7 +466,7 @@ namespace EDIC
                             State = lang.lang["DISCORD_RPC_INSYSTEM"] + ev.StarSystem,
                             Assets = new Assets()
                             {
-                                LargeImageKey = "sidewinder",
+                                LargeImageKey = client.CurrentPresence.Assets.LargeImageKey,
                             },
                             Timestamps = new Timestamps
                             {
@@ -437,7 +491,7 @@ namespace EDIC
                                 State = lang.lang["DISCORD_RPC_INSYSTEM"] + api.Location.StarSystem,
                                 Assets = new Assets()
                                 {
-                                    LargeImageKey = "sidewinder",
+                                    LargeImageKey = client.CurrentPresence.Assets.LargeImageKey,
                                 },
                                 Timestamps = new Timestamps
                                 {
@@ -464,7 +518,7 @@ namespace EDIC
                                 State = lang.lang["DISCORD_RPC_INSYSTEM"] + api.Location.StarSystem,
                                 Assets = new Assets()
                                 {
-                                    LargeImageKey = "sidewinder",
+                                    LargeImageKey = client.CurrentPresence.Assets.LargeImageKey,
                                 },
                                 Timestamps = new Timestamps
                                 {
