@@ -469,7 +469,7 @@ namespace EDIC
                             State = lang.lang["DISCORD_RPC_INSYSTEM"] + ev.StarSystem,
                             Assets = new Assets()
                             {
-                                LargeImageKey = client.CurrentPresence.Assets.LargeImageKey,
+                                LargeImageKey = ShipJSON.Ship.ToLower(),
                             },
                             Timestamps = new Timestamps
                             {
@@ -494,7 +494,7 @@ namespace EDIC
                                 State = lang.lang["DISCORD_RPC_INSYSTEM"] + api.Location.StarSystem,
                                 Assets = new Assets()
                                 {
-                                    LargeImageKey = client.CurrentPresence.Assets.LargeImageKey,
+                                    LargeImageKey = ShipJSON.Ship.ToLower(),
                                 },
                                 Timestamps = new Timestamps
                                 {
@@ -521,7 +521,7 @@ namespace EDIC
                                 State = lang.lang["DISCORD_RPC_INSYSTEM"] + api.Location.StarSystem,
                                 Assets = new Assets()
                                 {
-                                    LargeImageKey = client.CurrentPresence.Assets.LargeImageKey,
+                                    LargeImageKey = ShipJSON.Ship.ToLower(),
                                 },
                                 Timestamps = new Timestamps
                                 {
